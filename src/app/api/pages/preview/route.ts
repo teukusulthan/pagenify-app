@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth/guards";
 import { pageFormSchema } from "@/lib/validations/page.schema";
-import { generateSalesCopy } from "@/lib/services/llm.service";
-import { composeHtml } from "@/lib/services/html.service";
+import { generateSalesHtml } from "@/lib/services/llm.service";
+import { sanitizeHtmlContent } from "@/lib/services/html.service";
 import {
   apiSuccess,
   apiError,
@@ -21,19 +21,19 @@ export async function POST(request: NextRequest) {
       return apiValidationError(parsed.error.flatten());
     }
 
-    const copy = await generateSalesCopy({
+    const html = await generateSalesHtml({
       title: parsed.data.title,
       description: parsed.data.description,
       targetAudience: parsed.data.targetAudience,
       priceDisplay: parsed.data.priceDisplay,
       keyFeatures: parsed.data.keyFeatures,
       uniqueSellingPoints: parsed.data.uniqueSellingPoints,
-      hasImage: !!parsed.data.productImageUrl,
+      productImageUrl: parsed.data.productImageUrl ?? null,
     });
 
-    const html = composeHtml(copy, parsed.data.productImageUrl);
+    const safeHtml = sanitizeHtmlContent(html);
 
-    return apiSuccess("Preview generated", { html });
+    return apiSuccess("Preview generated", { html: safeHtml });
   } catch (error) {
     if (error instanceof AppError) {
       return apiError(error.message, error.code, error.statusCode);
