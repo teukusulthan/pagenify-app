@@ -75,12 +75,14 @@ export function PageCard({ page, username }: PageCardProps) {
             </Button>
           </Link>
           <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Archive className="mr-1 h-3 w-3" />
-                Archive
-              </Button>
-            </AlertDialogTrigger>
+            <AlertDialogTrigger
+              render={
+                <Button variant="outline" size="sm">
+                  <Archive className="mr-1 h-3 w-3" />
+                  Archive
+                </Button>
+              }
+            />
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Archive this page?</AlertDialogTitle>
