@@ -4,8 +4,7 @@ import { OFFER_TYPE_KEYWORDS } from "@/lib/constants/app";
 import { GenerationError } from "@/lib/utils/errors";
 
 const client = new OpenAI({
-  apiKey: process.env.ZAI_API_KEY,
-  baseURL: "https://api.z.ai/api/paas/v4/",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 function inferOfferType(title: string, description: string): string {
@@ -46,7 +45,7 @@ export async function generateSalesHtml(input: {
 
   try {
     const completion = await client.chat.completions.create({
-      model: process.env.ZAI_GLM_MODEL!,
+      model: process.env.OPENAI_MODEL!,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userPrompt },

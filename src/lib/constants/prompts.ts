@@ -6,8 +6,8 @@ Important rules:
 1. Return a COMPLETE HTML document (<!DOCTYPE html> through </html>).
 2. Do NOT wrap it in markdown or code fences.
 3. Do NOT include any explanations before or after the HTML.
-4. All CSS must be inline or in a <style> tag inside the HTML.
-5. Do NOT use any external CSS frameworks, CDNs, or JavaScript.
+4. All CSS must be inline or in a <TML.
+5. Do NOT use any external CSS frameworks, CDNs, or JavaScstyle> tag inside the Hript.
 6. Write persuasive, clear, professional copy.
 7. Do NOT invent fake claims or unsupported statistics.
 8. Do NOT fabricate real testimonials. Use safe placeholder-style social proof text.
