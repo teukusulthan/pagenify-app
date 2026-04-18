@@ -25,15 +25,15 @@ export default async function ArchivedPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader username={user.username} />
-      <main className="mx-auto max-w-6xl px-4 py-8">
-        <div className="mb-6 flex items-center gap-4">
+      <main className="mx-auto max-w-6xl px-4 py-6">
+        <div className="mb-4 flex items-center gap-3">
           <Link href="/dashboard">
             <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
               Back
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold">Archived Pages</h1>
+          <h1 className="text-xl font-bold">Archived Pages</h1>
         </div>
         <ArchivedPageList pages={serializedPages} />
       </main>

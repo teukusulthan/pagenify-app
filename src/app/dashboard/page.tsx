@@ -22,8 +22,8 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader username={user.username} />
-      <main className="mx-auto max-w-6xl px-4 py-8">
-        <h1 className="mb-6 text-2xl font-bold">Your Pages</h1>
+      <main className="mx-auto max-w-6xl px-4 py-6">
+        <h1 className="mb-4 text-xl font-bold">Your Pages</h1>
         <PageList pages={serializedPages} username={user.username} />
       </main>
     </div>

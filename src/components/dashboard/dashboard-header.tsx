@@ -32,26 +32,26 @@ export function DashboardHeader({ username }: { username: string }) {
 
   return (
     <header className="border-b bg-white">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/dashboard" className="text-xl font-bold">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        <Link href="/dashboard" className="text-lg font-bold">
           Pagenify
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link href="/dashboard/archived">
             <Button variant="ghost" size="sm">
-              <Archive className="mr-2 h-4 w-4" />
+              <Archive className="mr-1.5 h-3.5 w-3.5" />
               Archived
             </Button>
           </Link>
           <Link href="/dashboard/pages/new">
             <Button size="sm">
-              <FileText className="mr-2 h-4 w-4" />
+              <FileText className="mr-1.5 h-3.5 w-3.5" />
               Create Page
             </Button>
           </Link>
 
-          <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-5" />
 
           <DropdownMenu>
             <DropdownMenuTrigger

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PublicPageRenderer } from "@/components/sales-page/public-page-renderer";
-import { sanitizeHtmlContent } from "@/lib/services/html.service";
+import { stripPreHeroContent } from "@/lib/services/html.service";
 
 interface PublicPageProps {
   params: Promise<{ username: string; slug: string }>;
@@ -28,7 +28,7 @@ export default async function PublicPage({ params }: PublicPageProps) {
     notFound();
   }
 
-  const safeHtml = sanitizeHtmlContent(page.generatedHtml);
+  const cleanHtml = stripPreHeroContent(page.generatedHtml);
 
-  return <PublicPageRenderer html={safeHtml} />;
+  return <PublicPageRenderer html={cleanHtml} />;
 }
