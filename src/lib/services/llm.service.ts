@@ -1,12 +1,6 @@
-import OpenAI from "openai";
 import { SYSTEM_PROMPT, buildUserPrompt } from "@/lib/constants/prompts";
 import { OFFER_TYPE_KEYWORDS } from "@/lib/constants/app";
 import { GenerationError } from "@/lib/utils/errors";
-
-const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-});
 
 function inferOfferType(title: string, description: string): string {
   const text = `${title} ${description}`.toLowerCase();
@@ -44,20 +38,43 @@ export async function generateSalesHtml(input: {
     productImageUrl: input.productImageUrl,
   });
 
+  const apiKey = process.env.GEMINI_API_KEY;
+  const model = process.env.GEMINI_MODEL!;
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
   try {
-    const completion = await client.chat.completions.create({
-      model: process.env.GEMINI_MODEL!,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userPrompt },
-      ],
-      temperature: 0.7,
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: SYSTEM_PROMPT }],
+        },
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: userPrompt }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.7,
+        },
+      }),
     });
 
-    const content = completion.choices?.[0]?.message?.content;
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new GenerationError(
+        `Gemini API returned ${response.status}: ${errorBody}`
+      );
+    }
+
+    const data = await response.json();
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!content) {
-      throw new GenerationError("Empty response from LLM");
+      throw new GenerationError("Empty response from Gemini");
     }
 
     // Strip markdown code fences if present
@@ -69,9 +86,8 @@ export async function generateSalesHtml(input: {
     return html;
   } catch (error) {
     if (error instanceof GenerationError) throw error;
-
-    const message =
-      error instanceof Error ? error.message : "Unknown generation error";
-    throw new GenerationError(message);
+    throw new GenerationError(
+      error instanceof Error ? error.message : "Unknown generation error"
+    );
   }
 }
