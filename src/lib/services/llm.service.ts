@@ -55,8 +55,14 @@ export async function generateSalesCopy(
     );
 
     if (!response.ok) {
+      const errorBody = await response.text();
+      if (response.status === 429) {
+        throw new GenerationError(
+          "Rate limited by GLM API — please wait a moment and try again"
+        );
+      }
       throw new GenerationError(
-        `GLM API returned ${response.status}`
+        `GLM API returned ${response.status}: ${errorBody}`
       );
     }
 
