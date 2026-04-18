@@ -4,7 +4,8 @@ import { OFFER_TYPE_KEYWORDS } from "@/lib/constants/app";
 import { GenerationError } from "@/lib/utils/errors";
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.GEMINI_API_KEY,
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
 function inferOfferType(title: string, description: string): string {
@@ -45,7 +46,7 @@ export async function generateSalesHtml(input: {
 
   try {
     const completion = await client.chat.completions.create({
-      model: process.env.OPENAI_MODEL!,
+      model: process.env.GEMINI_MODEL!,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userPrompt },
@@ -56,7 +57,7 @@ export async function generateSalesHtml(input: {
     const content = completion.choices?.[0]?.message?.content;
 
     if (!content) {
-      throw new GenerationError("Empty response from GLM");
+      throw new GenerationError("Empty response from LLM");
     }
 
     // Strip markdown code fences if present
