@@ -274,7 +274,23 @@ Never:
 - bypass Prisma ORM
 - return inconsistent API responses
 - add non-MVP features without instruction
-## 18) Final execution rule
+## 18) Git commit rules
+Every commit must follow these rules:
+- **One logical change per commit.** Do not batch unrelated changes.
+- **Always push after committing.** If push fails, stop and report the blocker.
+- **Commit message format:** `<type>: <short description>`
+  - Types: `feat`, `fix`, `chore`, `refactor`, `docs`, `style`, `test`
+  - Example: `feat: add login page`, `fix: handle 429 rate limit`, `chore: update deps`
+- **After each small unit of work:**
+  1. `git add -A`
+  2. `git commit -m "<type>: <message>"`
+  3. `git push`
+- **Never commit `.env` files** (they are gitignored).
+- **Never use `--no-verify`** or skip hooks.
+- **Prefer creating new commits over amending**, unless explicitly asked.
+- If the user says "commit" or finishes a feature, commit immediately without waiting.
+
+## 19) Final execution rule
 Build the simplest clean version that fully satisfies the requirements.
 Optimize for correctness, clarity, maintainability, predictable behavior, and MVP completeness.
 When unsure, choose the solution that is easier to reason about, easier to validate, safer for AI-generated output, and more aligned with the requirements document.
