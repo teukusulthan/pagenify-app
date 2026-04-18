@@ -18,6 +18,31 @@ function inferOfferType(title: string, description: string): string {
   return "general";
 }
 
+const MAX_RETRIES = 3;
+const RETRY_DELAYS = [3000, 6000, 10000]; // ms
+
+async function callGlmApi(userPrompt: string): Promise<Response> {
+  return fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.ZAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: process.env.ZAI_GLM_MODEL,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userPrompt },
+      ],
+      temperature: 0.7,
+    }),
+  });
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function generateSalesCopy(
   input: LlmGenerateInput
 ): Promise<LlmStructuredOutput> {
@@ -35,58 +60,54 @@ export async function generateSalesCopy(
   });
 
   try {
-    const response = await fetch(
-      "https://open.bigmodel.cn/api/paas/v4/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.ZAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: process.env.ZAI_GLM_MODEL,
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: userPrompt },
-          ],
-          temperature: 0.7,
-        }),
-      }
-    );
+    let response: Response;
 
-    if (!response.ok) {
-      const errorBody = await response.text();
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      response = await callGlmApi(userPrompt);
+
       if (response.status === 429) {
+        if (attempt < MAX_RETRIES) {
+          await sleep(RETRY_DELAYS[attempt]);
+          continue;
+        }
         throw new GenerationError(
-          "Rate limited by GLM API — please wait a moment and try again"
+          "Rate limited by GLM API — all retries exhausted. Please wait and try again."
         );
       }
-      throw new GenerationError(
-        `GLM API returned ${response.status}: ${errorBody}`
-      );
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new GenerationError(
+          `GLM API returned ${response.status}: ${errorBody}`
+        );
+      }
+
+      // Success path
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content;
+
+      if (!content) {
+        throw new GenerationError("Empty response from GLM");
+      }
+
+      let jsonStr = content.trim();
+      if (jsonStr.startsWith("```")) {
+        jsonStr = jsonStr
+          .replace(/^```(?:json)?\n?/, "")
+          .replace(/\n?```$/, "");
+      }
+
+      const parsed = JSON.parse(jsonStr);
+      const validated = llmResponseSchema.safeParse(parsed);
+
+      if (!validated.success) {
+        throw new GenerationError("Invalid AI response structure");
+      }
+
+      return validated.data;
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) {
-      throw new GenerationError("Empty response from GLM");
-    }
-
-    // Strip markdown code fences if present
-    let jsonStr = content.trim();
-    if (jsonStr.startsWith("```")) {
-      jsonStr = jsonStr.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
-    }
-
-    const parsed = JSON.parse(jsonStr);
-    const validated = llmResponseSchema.safeParse(parsed);
-
-    if (!validated.success) {
-      throw new GenerationError("Invalid AI response structure");
-    }
-
-    return validated.data;
+    throw new GenerationError("Failed after maximum retries");
   } catch (error) {
     if (error instanceof GenerationError) throw error;
     throw new GenerationError(
