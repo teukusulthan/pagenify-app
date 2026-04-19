@@ -148,12 +148,7 @@ export function PageBuilderForm({
               </Button>
             </Link>
 
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-                <span className="text-xs font-bold text-white">P</span>
-              </div>
-              <span className="text-sm font-bold text-gray-900">Pagenify</span>
-            </div>
+            <span className="text-sm font-bold text-gray-900">Pagenify</span>
 
             <span className="text-gray-300">/</span>
 
