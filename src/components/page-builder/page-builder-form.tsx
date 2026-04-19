@@ -11,12 +11,14 @@ import {
   ImageIcon,
   Loader2,
   Monitor,
+  Download,
 } from "lucide-react";
 import {
   pageFormSchema,
   type PageFormInput,
 } from "@/lib/validations/page.schema";
 import { usePreviewStore } from "@/store/preview.store";
+import { exportHtmlAsFile } from "@/lib/utils/export-html";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -65,6 +67,7 @@ export function PageBuilderForm({
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<PageFormInput>({
     resolver: zodResolver(pageFormSchema),
@@ -78,6 +81,8 @@ export function PageBuilderForm({
       productImageUrl: initialData?.productImageUrl ?? null,
     },
   });
+
+  const title = watch("title");
 
   async function handleGeneratePreview(data: PageFormInput) {
     setGenerating(true);
@@ -267,6 +272,22 @@ export function PageBuilderForm({
               ) : (
                 submitLabel
               )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              disabled={!generatedHtml}
+              onClick={() => {
+                const filename = title
+                  ? title.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
+                  : "sales-page";
+                exportHtmlAsFile(generatedHtml!, filename);
+              }}
+              title="Export HTML"
+            >
+              <Download className="h-4 w-4" />
             </Button>
           </div>
         </div>
