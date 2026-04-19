@@ -12,7 +12,10 @@ import {
   Loader2,
   Monitor,
   Download,
+  ArrowLeft,
+  Sparkles as SparkleIcon,
 } from "lucide-react";
+import Link from "next/link";
 import {
   pageFormSchema,
   type PageFormInput,
@@ -35,6 +38,7 @@ interface PageBuilderFormProps {
   onSubmit: (data: PageFormInput & { generatedHtml: string }) => Promise<void>;
   submitLabel: string;
   submitLoadingLabel: string;
+  headerTitle: string;
 }
 
 export function PageBuilderForm({
@@ -42,6 +46,7 @@ export function PageBuilderForm({
   onSubmit,
   submitLabel,
   submitLoadingLabel,
+  headerTitle,
 }: PageBuilderFormProps) {
   const [generating, setGenerating] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -126,258 +131,297 @@ export function PageBuilderForm({
     }
   }
 
+  const filename = title
+    ? title.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
+    : "sales-page";
+
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden">
-      {/* Left Panel — Form */}
-      <aside className="flex w-full shrink-0 flex-col border-r bg-white lg:w-[530px]">
-        <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="space-y-1 p-6">
-          {/* Section: Basic Information */}
-          <FormSection icon={FileText} title="Basic Information">
-            <FormField
-              label="Title"
-              htmlFor="title"
-              hint="Your product or service name"
-              error={errors.title?.message}
-            >
-              <Input
-                id="title"
-                placeholder="e.g. Ultimate Marketing Toolkit"
-                {...register("title")}
-              />
-            </FormField>
+    <div className="flex h-screen flex-col">
+      {/* ── Navbar ── */}
+      <header className="sticky top-0 z-30 shrink-0 border-b bg-white/95 backdrop-blur-md">
+        <div className="flex h-14 items-center justify-between px-4">
+          {/* Left: Back + Logo + Title */}
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
 
-            <FormField
-              label="Description"
-              htmlFor="description"
-              hint="A brief overview of what you offer"
-              error={errors.description?.message}
-            >
-              <Textarea
-                id="description"
-                rows={4}
-                placeholder="Describe your product or service in a few sentences..."
-                {...register("description")}
-              />
-            </FormField>
-          </FormSection>
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
+                <span className="text-xs font-bold text-white">P</span>
+              </div>
+              <span className="text-sm font-bold text-gray-900">Pagenify</span>
+            </div>
 
-          {/* Section: Target Market */}
-          <FormSection icon={Users} title="Target Market">
-            <FormField
-              label="Target Audience"
-              htmlFor="targetAudience"
-              hint="Who is this for?"
-              error={errors.targetAudience?.message}
-            >
-              <Input
-                id="targetAudience"
-                placeholder="e.g. Small business owners, freelancers"
-                {...register("targetAudience")}
-              />
-            </FormField>
+            <span className="text-gray-300">/</span>
 
-            <FormField
-              label="Price Display"
-              htmlFor="priceDisplay"
-              hint="How should the price appear?"
-              error={errors.priceDisplay?.message}
-            >
-              <Input
-                id="priceDisplay"
-                placeholder="e.g. $49 one-time, $19/mo"
-                {...register("priceDisplay")}
-              />
-            </FormField>
-          </FormSection>
+            <h1 className="text-sm font-medium text-gray-600">{headerTitle}</h1>
+          </div>
 
-          {/* Section: Product Details */}
-          <FormSection icon={Sparkles} title="Product Details">
-            <Controller
-              name="keyFeatures"
-              control={control}
-              render={({ field }) => (
-                <MultiInputField
-                  label="Key Features"
-                  values={field.value}
-                  onChange={field.onChange}
-                  error={errors.keyFeatures?.message}
-                  placeholder="Add a feature..."
-                />
-              )}
-            />
-
-            <Controller
-              name="uniqueSellingPoints"
-              control={control}
-              render={({ field }) => (
-                <MultiInputField
-                  label="Unique Selling Points"
-                  values={field.value}
-                  onChange={field.onChange}
-                  error={errors.uniqueSellingPoints?.message}
-                  placeholder="Add a selling point..."
-                />
-              )}
-            />
-          </FormSection>
-
-          {/* Section: Media */}
-          <FormSection icon={ImageIcon} title="Media">
-            <Controller
-              name="productImageUrl"
-              control={control}
-              render={({ field }) => (
-                <ImageUploadField
-                  value={field.value ?? null}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FormSection>
-
-        </div>
-        </div>
-        {/* Actions — pinned at bottom, never scrolls */}
-        <div className="shrink-0 border-t bg-white px-6 py-4">
-          <div className="flex gap-3">
+          {/* Right: Save + Export */}
+          <div className="flex items-center gap-2">
             <Button
               type="button"
               variant="outline"
-              className="flex-1"
-              disabled={generating}
-              onClick={handleSubmit(handleGeneratePreview)}
+              size="sm"
+              className="gap-1.5"
+              disabled={!generatedHtml}
+              onClick={() => {
+                exportHtmlAsFile(generatedHtml!, filename);
+              }}
             >
-              {generating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                "Generate Preview"
-              )}
+              <Download className="h-3.5 w-3.5" />
+              Export HTML
             </Button>
 
             <Button
               type="button"
-              className="flex-1"
+              size="sm"
+              className="gap-1.5"
               disabled={submitting || !generatedHtml}
               onClick={handleSubmit(handleFormSubmit)}
             >
               {submitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   {submitLoadingLabel}
                 </>
               ) : (
                 submitLabel
               )}
             </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              disabled={!generatedHtml}
-              onClick={() => {
-                const filename = title
-                  ? title.replace(/[^a-z0-9]+/gi, "-").toLowerCase()
-                  : "sales-page";
-                exportHtmlAsFile(generatedHtml!, filename);
-              }}
-              title="Export HTML"
-            >
-              <Download className="h-4 w-4" />
-            </Button>
           </div>
         </div>
-      </aside>
+      </header>
 
-      {/* Right Panel — Preview */}
-      <main className="hidden flex-1 overflow-hidden bg-gray-100 lg:block">
-        <div className="flex h-full flex-col items-center justify-center p-6">
-          {/* Preview header */}
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
-              <Monitor className="h-4 w-4" />
-              Live Preview
-              <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs font-normal text-gray-500">
-                1920 × 1080
-              </span>
+      {/* ── Builder body ── */}
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        {/* Left Panel — Form */}
+        <aside className="flex w-full shrink-0 flex-col border-r bg-white lg:w-[530px]">
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="space-y-1 p-6">
+              {/* Section: Basic Information */}
+              <FormSection icon={FileText} title="Basic Information">
+                <FormField
+                  label="Title"
+                  htmlFor="title"
+                  hint="Your product or service name"
+                  error={errors.title?.message}
+                >
+                  <Input
+                    id="title"
+                    placeholder="e.g. Ultimate Marketing Toolkit"
+                    {...register("title")}
+                  />
+                </FormField>
+
+                <FormField
+                  label="Description"
+                  htmlFor="description"
+                  hint="A brief overview of what you offer"
+                  error={errors.description?.message}
+                >
+                  <Textarea
+                    id="description"
+                    rows={4}
+                    placeholder="Describe your product or service in a few sentences..."
+                    {...register("description")}
+                  />
+                </FormField>
+              </FormSection>
+
+              {/* Section: Target Market */}
+              <FormSection icon={Users} title="Target Market">
+                <FormField
+                  label="Target Audience"
+                  htmlFor="targetAudience"
+                  hint="Who is this for?"
+                  error={errors.targetAudience?.message}
+                >
+                  <Input
+                    id="targetAudience"
+                    placeholder="e.g. Small business owners, freelancers"
+                    {...register("targetAudience")}
+                  />
+                </FormField>
+
+                <FormField
+                  label="Price Display"
+                  htmlFor="priceDisplay"
+                  hint="How should the price appear?"
+                  error={errors.priceDisplay?.message}
+                >
+                  <Input
+                    id="priceDisplay"
+                    placeholder="e.g. $49 one-time, $19/mo"
+                    {...register("priceDisplay")}
+                  />
+                </FormField>
+              </FormSection>
+
+              {/* Section: Product Details */}
+              <FormSection icon={Sparkles} title="Product Details">
+                <Controller
+                  name="keyFeatures"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiInputField
+                      label="Key Features"
+                      values={field.value}
+                      onChange={field.onChange}
+                      error={errors.keyFeatures?.message}
+                      placeholder="Add a feature..."
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="uniqueSellingPoints"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiInputField
+                      label="Unique Selling Points"
+                      values={field.value}
+                      onChange={field.onChange}
+                      error={errors.uniqueSellingPoints?.message}
+                      placeholder="Add a selling point..."
+                    />
+                  )}
+                />
+              </FormSection>
+
+              {/* Section: Media */}
+              <FormSection icon={ImageIcon} title="Media">
+                <Controller
+                  name="productImageUrl"
+                  control={control}
+                  render={({ field }) => (
+                    <ImageUploadField
+                      value={field.value ?? null}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </FormSection>
             </div>
           </div>
 
-          {/* Preview container */}
-          <div ref={previewRef} className="w-full">
-            {generatedHtml ? (
-              <div
-                className="mx-auto overflow-hidden rounded-xl border border-gray-200 bg-gray-800 shadow-2xl"
-                style={{ width: PREVIEW_WIDTH * scale }}
-              >
-                {/* Browser chrome */}
-                <div className="flex items-center gap-2 bg-gray-800 px-4 py-2.5">
-                  <div className="flex gap-1.5">
-                    <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
-                    <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
-                    <span className="h-3 w-3 rounded-full bg-[#28C840]" />
-                  </div>
-                  <div className="ml-3 flex-1 rounded-md bg-gray-700 px-3 py-1">
-                    <span className="text-xs text-gray-400">
-                      yourpage.com
-                    </span>
-                  </div>
-                </div>
-                {/* Scaled 1920x1080 viewport */}
+          {/* Bottom bar — Generate / Regenerate only */}
+          <div className="shrink-0 border-t bg-white px-6 py-4">
+            <Button
+              type="button"
+              className="w-full gap-2"
+              disabled={generating}
+              onClick={handleSubmit(handleGeneratePreview)}
+            >
+              {generating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : generatedHtml ? (
+                <>
+                  <SparkleIcon className="h-4 w-4" />
+                  Regenerate Preview
+                </>
+              ) : (
+                <>
+                  <SparkleIcon className="h-4 w-4" />
+                  Generate Preview
+                </>
+              )}
+            </Button>
+          </div>
+        </aside>
+
+        {/* Right Panel — Preview */}
+        <main className="hidden flex-1 overflow-hidden bg-gray-100 lg:block">
+          <div className="flex h-full flex-col items-center justify-center p-6">
+            {/* Preview header */}
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Monitor className="h-4 w-4" />
+                Live Preview
+                <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs font-normal text-gray-500">
+                  1920 × 1080
+                </span>
+              </div>
+            </div>
+
+            {/* Preview container */}
+            <div ref={previewRef} className="w-full">
+              {generatedHtml ? (
                 <div
-                  style={{
-                    height: PREVIEW_HEIGHT * scale,
-                    overflow: "hidden",
-                    background: "#fff",
-                  }}
+                  className="mx-auto overflow-hidden rounded-xl border border-gray-200 bg-gray-800 shadow-2xl"
+                  style={{ width: PREVIEW_WIDTH * scale }}
                 >
+                  {/* Browser chrome */}
+                  <div className="flex items-center gap-2 bg-gray-800 px-4 py-2.5">
+                    <div className="flex gap-1.5">
+                      <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+                      <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
+                      <span className="h-3 w-3 rounded-full bg-[#28C840]" />
+                    </div>
+                    <div className="ml-3 flex-1 rounded-md bg-gray-700 px-3 py-1">
+                      <span className="text-xs text-gray-400">
+                        yourpage.com
+                      </span>
+                    </div>
+                  </div>
+                  {/* Scaled 1920x1080 viewport */}
                   <div
                     style={{
-                      width: PREVIEW_WIDTH,
-                      height: PREVIEW_HEIGHT,
-                      transform: `scale(${scale})`,
-                      transformOrigin: "top left",
+                      height: PREVIEW_HEIGHT * scale,
+                      overflow: "hidden",
+                      background: "#fff",
                     }}
                   >
-                    <iframe
-                      srcDoc={generatedHtml}
+                    <div
                       style={{
                         width: PREVIEW_WIDTH,
                         height: PREVIEW_HEIGHT,
-                        border: "none",
+                        transform: `scale(${scale})`,
+                        transformOrigin: "top left",
                       }}
-                      title="Page Preview"
-                      sandbox="allow-same-origin"
-                    />
+                    >
+                      <iframe
+                        srcDoc={generatedHtml}
+                        style={{
+                          width: PREVIEW_WIDTH,
+                          height: PREVIEW_HEIGHT,
+                          border: "none",
+                        }}
+                        title="Page Preview"
+                        sandbox="allow-same-origin"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div
-                className="mx-auto flex items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white"
-                style={{
-                  width: PREVIEW_WIDTH * scale,
-                  height: PREVIEW_HEIGHT * scale,
-                }}
-              >
-                <div className="text-center">
-                  <Monitor className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-                  <p className="text-sm font-medium text-gray-400">
-                    Fill in the form and generate a preview
-                  </p>
-                  <p className="mt-1 text-xs text-gray-300">
-                    Your page will appear here at 1920 × 1080
-                  </p>
+              ) : (
+                <div
+                  className="mx-auto flex items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white"
+                  style={{
+                    width: PREVIEW_WIDTH * scale,
+                    height: PREVIEW_HEIGHT * scale,
+                  }}
+                >
+                  <div className="text-center">
+                    <Monitor className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+                    <p className="text-sm font-medium text-gray-400">
+                      Fill in the form and generate a preview
+                    </p>
+                    <p className="mt-1 text-xs text-gray-300">
+                      Your page will appear here at 1920 × 1080
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
