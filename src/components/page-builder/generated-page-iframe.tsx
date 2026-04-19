@@ -32,25 +32,25 @@ export function GeneratedPageIframe({ html }: GeneratedPageIframeProps) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-700">
+      <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
         <Monitor className="h-4 w-4" />
         Live Preview
-        <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs font-normal text-gray-500">
+        <span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-normal text-muted-foreground">
           1920 × 1080
         </span>
       </div>
 
       <div ref={containerRef} className="w-full">
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-800 shadow-2xl">
+        <div className="overflow-hidden rounded-xl border border-border bg-zinc-900 shadow-2xl">
           {/* Browser chrome */}
-          <div className="flex items-center gap-2 bg-gray-800 px-4 py-2.5">
+          <div className="flex items-center gap-2 bg-zinc-900 px-4 py-2.5">
             <div className="flex gap-1.5">
               <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
               <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
               <span className="h-3 w-3 rounded-full bg-[#28C840]" />
             </div>
-            <div className="ml-3 flex-1 rounded-md bg-gray-700 px-3 py-1">
-              <span className="text-xs text-gray-400">yourpage.com</span>
+            <div className="ml-3 flex-1 rounded-md bg-zinc-800 px-3 py-1">
+              <span className="text-xs text-zinc-500">yourpage.com</span>
             </div>
           </div>
           {/* Scaled 1920x1080 viewport */}

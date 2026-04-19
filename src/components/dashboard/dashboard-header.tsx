@@ -31,9 +31,9 @@ export function DashboardHeader({ username }: { username: string }) {
   }
 
   return (
-    <header className="border-b bg-white">
+    <header className="border-b bg-background">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link href="/dashboard" className="text-lg font-bold">
+        <Link href="/dashboard" className="text-lg font-bold text-foreground">
           Pagenify
         </Link>
 

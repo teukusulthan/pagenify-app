@@ -23,7 +23,7 @@ export default async function ArchivedPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <DashboardHeader username={user.username} />
       <main className="mx-auto max-w-6xl px-4 py-6">
         <div className="mb-4 flex items-center gap-3">

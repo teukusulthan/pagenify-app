@@ -20,7 +20,7 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <DashboardHeader username={user.username} />
       <main className="mx-auto max-w-6xl px-4 py-6">
         <h1 className="mb-4 text-xl font-bold">Your Pages</h1>

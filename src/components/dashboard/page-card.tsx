@@ -49,7 +49,7 @@ export function PageCard({ page, username }: PageCardProps) {
   }
 
   return (
-    <Card className="group overflow-hidden p-0 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-gray-300">
+    <Card className="group overflow-hidden p-0 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-primary/30">
       {/* Thumbnail */}
       <Link href={publicUrl} target="_blank">
         <PageThumbnail html={page.generatedHtml} />

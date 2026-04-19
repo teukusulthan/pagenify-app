@@ -138,21 +138,21 @@ export function PageBuilderForm({
   return (
     <div className="flex h-screen flex-col">
       {/* ── Navbar ── */}
-      <header className="sticky top-0 z-30 shrink-0 border-b bg-white/95 backdrop-blur-md">
+      <header className="sticky top-0 z-30 shrink-0 border-b bg-background/95 backdrop-blur-md">
         <div className="flex h-14 items-center justify-between px-4">
           {/* Left: Back + Logo + Title */}
           <div className="flex items-center gap-3">
             <Link href="/dashboard">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
 
-            <span className="text-sm font-bold text-gray-900">Pagenify</span>
+            <span className="text-sm font-bold text-foreground">Pagenify</span>
 
-            <span className="text-gray-300">/</span>
+            <span className="text-muted-foreground/40">/</span>
 
-            <h1 className="text-sm font-medium text-gray-600">{headerTitle}</h1>
+            <h1 className="text-sm font-medium text-muted-foreground">{headerTitle}</h1>
           </div>
 
           {/* Right: Save + Export */}
@@ -194,7 +194,7 @@ export function PageBuilderForm({
       {/* ── Builder body ── */}
       <div className="flex min-h-0 flex-1 overflow-hidden">
         {/* Left Panel — Form */}
-        <aside className="flex w-full shrink-0 flex-col border-r bg-white lg:w-[530px]">
+        <aside className="flex w-full shrink-0 flex-col border-r bg-card lg:w-[530px]">
           <div className="min-h-0 flex-1 overflow-y-auto">
             <div className="space-y-1 p-6">
               {/* Section: Basic Information */}
@@ -304,7 +304,7 @@ export function PageBuilderForm({
           </div>
 
           {/* Bottom bar — Generate / Regenerate only */}
-          <div className="shrink-0 border-t bg-white px-6 py-4">
+          <div className="shrink-0 border-t bg-card px-6 py-4">
             <Button
               type="button"
               className="w-full gap-2"
@@ -332,14 +332,14 @@ export function PageBuilderForm({
         </aside>
 
         {/* Right Panel — Preview */}
-        <main className="hidden flex-1 overflow-hidden bg-gray-100 lg:block">
+        <main className="hidden flex-1 overflow-hidden bg-muted/50 lg:block">
           <div className="flex h-full flex-col items-center justify-center p-6">
             {/* Preview header */}
             <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                 <Monitor className="h-4 w-4" />
                 Live Preview
-                <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs font-normal text-gray-500">
+                <span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-normal text-muted-foreground">
                   1920 × 1080
                 </span>
               </div>
@@ -349,18 +349,18 @@ export function PageBuilderForm({
             <div ref={previewRef} className="w-full">
               {generatedHtml ? (
                 <div
-                  className="mx-auto overflow-hidden rounded-xl border border-gray-200 bg-gray-800 shadow-2xl"
+                  className="mx-auto overflow-hidden rounded-xl border border-border bg-zinc-900 shadow-2xl"
                   style={{ width: PREVIEW_WIDTH * scale }}
                 >
                   {/* Browser chrome */}
-                  <div className="flex items-center gap-2 bg-gray-800 px-4 py-2.5">
+                  <div className="flex items-center gap-2 bg-zinc-900 px-4 py-2.5">
                     <div className="flex gap-1.5">
                       <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
                       <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
                       <span className="h-3 w-3 rounded-full bg-[#28C840]" />
                     </div>
-                    <div className="ml-3 flex-1 rounded-md bg-gray-700 px-3 py-1">
-                      <span className="text-xs text-gray-400">
+                    <div className="ml-3 flex-1 rounded-md bg-zinc-800 px-3 py-1">
+                      <span className="text-xs text-zinc-500">
                         yourpage.com
                       </span>
                     </div>
@@ -396,18 +396,18 @@ export function PageBuilderForm({
                 </div>
               ) : (
                 <div
-                  className="mx-auto flex items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white"
+                  className="mx-auto flex items-center justify-center rounded-xl border-2 border-dashed border-border bg-card"
                   style={{
                     width: PREVIEW_WIDTH * scale,
                     height: PREVIEW_HEIGHT * scale,
                   }}
                 >
                   <div className="text-center">
-                    <Monitor className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-                    <p className="text-sm font-medium text-gray-400">
+                    <Monitor className="mx-auto mb-3 h-10 w-10 text-muted-foreground/30" />
+                    <p className="text-sm font-medium text-muted-foreground">
                       Fill in the form and generate a preview
                     </p>
-                    <p className="mt-1 text-xs text-gray-300">
+                    <p className="mt-1 text-xs text-muted-foreground/60">
                       Your page will appear here at 1920 × 1080
                     </p>
                   </div>
@@ -433,12 +433,12 @@ function FormSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-5">
+    <div className="rounded-xl border border-border bg-muted/50 p-5">
       <div className="mb-4 flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
+        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/15">
           <Icon className="h-3.5 w-3.5 text-primary" />
         </div>
-        <h3 className="text-sm font-semibold text-gray-800">{title}</h3>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
       <div className="space-y-4">{children}</div>
     </div>
@@ -461,13 +461,13 @@ function FormField({
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between">
-        <Label htmlFor={htmlFor} className="text-sm font-medium text-gray-700">
+        <Label htmlFor={htmlFor} className="text-sm font-medium text-foreground">
           {label}
         </Label>
-        {hint && <span className="text-xs text-gray-400">{hint}</span>}
+        {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
 }

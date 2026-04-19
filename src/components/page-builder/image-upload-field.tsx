@@ -69,7 +69,7 @@ export function ImageUploadField({ value, onChange }: ImageUploadFieldProps) {
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white"
+            className="absolute -right-2 -top-2 rounded-full bg-destructive p-1 text-white"
           >
             <X className="h-3 w-3" />
           </button>

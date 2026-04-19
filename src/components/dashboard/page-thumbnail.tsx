@@ -98,7 +98,7 @@ export function PageThumbnail({ html }: PageThumbnailProps) {
 
   if (!heroHtml) {
     return (
-      <div className="flex h-40 items-center justify-center bg-gray-100 text-sm text-gray-400">
+      <div className="flex h-40 items-center justify-center bg-muted text-sm text-muted-foreground">
         No preview available
       </div>
     );
@@ -107,7 +107,7 @@ export function PageThumbnail({ html }: PageThumbnailProps) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-gray-100"
+      className="relative w-full overflow-hidden bg-muted"
       style={{ height: IFRAME_H * scale }}
     >
       <iframe

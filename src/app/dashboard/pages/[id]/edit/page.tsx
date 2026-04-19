@@ -69,10 +69,10 @@ export default function EditPagePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-gray-400" />
-          <p className="mt-3 text-sm text-gray-500">Loading page...</p>
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+          <p className="mt-3 text-sm text-muted-foreground">Loading page...</p>
         </div>
       </div>
     );
