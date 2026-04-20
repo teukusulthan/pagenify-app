@@ -147,7 +147,7 @@ function stripCodeFences(value: string): string {
   return output.trim();
 }
 
-export async function generateSalesHtmlWisgate(input: {
+export async function generateSalesHtmlGemini(input: {
   title: string;
   description: string;
   targetAudience: string;
@@ -169,28 +169,32 @@ export async function generateSalesHtmlWisgate(input: {
     productImageUrl: input.productImageUrl,
   });
 
-  const apiKey = process.env.WISGATE_API_KEY;
-  const model = process.env.WISGATE_MODEL || "deepseek-v3";
-  const baseUrl = process.env.WISGATE_BASE_URL || "https://wisgate.ai/v1";
+  const apiKey = process.env.GEMINI_API_KEY;
+  const model = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
   if (!apiKey) {
-    throw new GenerationError("Missing WISGATE_API_KEY");
+    throw new GenerationError("Missing GEMINI_API_KEY");
   }
 
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
   try {
-    const response = await fetch(`${baseUrl}/chat/completions`, {
+    const response = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt },
+        systemInstruction: {
+          parts: [{ text: SYSTEM_PROMPT }],
+        },
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: userPrompt }],
+          },
         ],
-        temperature: 0.7,
+        generationConfig: {
+          temperature: 0.7,
+        },
       }),
       cache: "no-store",
     });
@@ -198,16 +202,16 @@ export async function generateSalesHtmlWisgate(input: {
     if (!response.ok) {
       const errorBody = await response.text();
       throw new GenerationError(
-        `Wisgate API returned ${response.status}: ${errorBody}`,
+        `Gemini API returned ${response.status}: ${errorBody}`,
       );
     }
 
     const data = await response.json();
-    const rawContent = data?.choices?.[0]?.message?.content;
+    const rawContent = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     const content = normalizeMessageContent(rawContent);
 
     if (!content) {
-      throw new GenerationError("Empty response from Wisgate");
+      throw new GenerationError("Empty response from Gemini");
     }
 
     return stripCodeFences(content);
@@ -331,7 +335,7 @@ export async function generateWithTier(
   input: GenerateInput,
   tier: ModelTier
 ): Promise<string> {
-  if (tier === "fast") return generateSalesHtmlWisgate(input);
+  if (tier === "fast") return generateSalesHtmlGemini(input);
   if (tier === "think") return generateSalesHtml(input, { reasoning: true });
   return generateSalesHtml(input, { reasoning: false });
 }

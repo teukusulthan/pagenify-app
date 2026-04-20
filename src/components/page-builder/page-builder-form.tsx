@@ -400,9 +400,14 @@ export function PageBuilderForm({
 
           <div className="shrink-0 border-t bg-card px-6 py-4 space-y-3">
             <div className="space-y-2">
-              <span className="text-xs font-medium text-muted-foreground">AI Model</span>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">AI Model</span>
+                <span className="text-xs text-muted-foreground/60">
+                  Est. {MODEL_OPTIONS.find((m) => m.id === modelTier)?.estimate}
+                </span>
+              </div>
               <div className="grid grid-cols-3 gap-1 rounded-lg border bg-muted/50 p-1">
-                {MODEL_OPTIONS.map(({ id, label }) => {
+                {MODEL_OPTIONS.map(({ id, label, estimate }) => {
                   const Icon = id === "fast" ? Lightning : id === "think" ? Lightbulb : Gauge;
                   return (
                     <button
@@ -410,14 +415,22 @@ export function PageBuilderForm({
                       type="button"
                       onClick={() => setModelTier(id)}
                       className={cn(
-                        "flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-all",
+                        "flex flex-col items-center gap-0.5 rounded-md px-2 py-2 text-xs font-medium transition-all",
                         modelTier === id
                           ? "bg-background text-foreground shadow-sm"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground"
                       )}
                     >
-                      <Icon className="h-3 w-3" />
-                      {label}
+                      <div className="flex items-center gap-1">
+                        <Icon className="h-3 w-3" />
+                        {label}
+                      </div>
+                      <span className={cn(
+                        "text-[10px] font-normal",
+                        modelTier === id ? "text-muted-foreground" : "text-muted-foreground/50"
+                      )}>
+                        {estimate}
+                      </span>
                     </button>
                   );
                 })}
