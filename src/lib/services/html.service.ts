@@ -43,7 +43,7 @@ export function sanitizeHtmlContent(html: string): string {
       "figure",
       "figcaption",
     ]),
-    nonTextTags: ["script", "textarea", "option", "noscript"],
+    nonTextTags: ["script", "textarea", "option", "noscript", "title", "head", "meta", "link"],
     allowedAttributes: {
       ...sanitizeHtml.defaults.allowedAttributes,
       "*": ["class", "style", "id"],
