@@ -30,12 +30,7 @@ export default async function LandingPage() {
       {/* ─── Navbar ─── */}
       <header className="relative z-20 border-b border-border/30 bg-background/70 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/15">
-              <Sparkle className="h-4 w-4 text-primary" weight="fill" />
-            </div>
-            <span className="text-sm font-semibold tracking-tight">Pagenify</span>
-          </div>
+          <span className="text-sm font-semibold tracking-tight">Pagenify</span>
 
           <div className="flex items-center gap-2">
             {user ? (
@@ -327,12 +322,7 @@ export default async function LandingPage() {
       <footer className="border-t border-border/30 py-8">
         <div className="mx-auto max-w-6xl px-5">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/15">
-                <Sparkle className="h-3.5 w-3.5 text-primary" weight="fill" />
-              </div>
-              <span className="text-sm font-semibold">Pagenify</span>
-            </div>
+            <span className="text-sm font-semibold">Pagenify</span>
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} Pagenify. Build smarter, sell faster.
             </p>

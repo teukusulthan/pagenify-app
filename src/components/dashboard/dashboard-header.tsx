@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { SignOut, Trash, Plus, Sparkle } from "@phosphor-icons/react/dist/ssr";
+import { SignOut, Trash, Plus } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -47,12 +47,9 @@ export function DashboardHeader({ username }: { username: string }) {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 text-foreground transition-opacity hover:opacity-80"
+          className="text-sm font-semibold tracking-tight text-foreground transition-opacity hover:opacity-80"
         >
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/15">
-            <Sparkle className="h-3.5 w-3.5 text-primary" weight="fill" />
-          </div>
-          <span className="text-sm font-semibold tracking-tight">Pagenify</span>
+          Pagenify
         </Link>
 
         <div className="flex items-center gap-1.5">

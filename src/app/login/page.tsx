@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { APP_NAME } from "@/lib/constants/app";
-import { Sparkle } from "@phosphor-icons/react/dist/ssr";
 
 export default function LoginPage() {
   return (
@@ -21,10 +20,7 @@ export default function LoginPage() {
       </div>
 
       <div className="relative w-full max-w-[26rem]">
-        <div className="mb-6 flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/15">
-            <Sparkle className="h-4 w-4 text-primary" weight="fill" />
-          </div>
+        <div className="mb-6">
           <span className="text-sm font-semibold tracking-tight text-foreground">
             {APP_NAME}
           </span>
