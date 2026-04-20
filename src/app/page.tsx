@@ -21,7 +21,10 @@ export default async function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Ambient background glows */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 overflow-hidden"
+      >
         <div className="absolute -top-60 left-1/3 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-primary/5 blur-[140px]" />
         <div className="absolute top-1/3 right-0 h-[500px] w-[500px] rounded-full bg-violet-500/4 blur-[120px]" />
         <div className="absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full bg-primary/3 blur-[100px]" />
@@ -29,8 +32,10 @@ export default async function LandingPage() {
 
       {/* ─── Navbar ─── */}
       <header className="fixed inset-x-0 top-0 z-20 border-b border-border/30 bg-background/70 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
-          <span className="text-base font-semibold tracking-tight">Pagenify</span>
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
+          <span className="text-base font-semibold tracking-tight">
+            Pagenify
+          </span>
 
           <div className="flex items-center gap-2">
             {user ? (
@@ -43,7 +48,10 @@ export default async function LandingPage() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+                  <Button
+                    variant="ghost"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     Sign in
                   </Button>
                 </Link>
@@ -80,13 +88,16 @@ export default async function LandingPage() {
           {/* Subtext */}
           <p className="mx-auto mb-9 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
             Describe your offer, pick a model, and let AI generate a complete,
-            beautiful sales page — ready to share in under 2 minutes.
+            beautiful sales page ready to share in under 2 minutes.
           </p>
 
           {/* CTA row */}
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link href={user ? "/dashboard/pages/new" : "/register"}>
-              <Button size="lg" className="h-11 gap-2 px-7 text-sm font-semibold">
+              <Button
+                size="lg"
+                className="h-11 gap-2 px-7 text-sm font-semibold"
+              >
                 <Sparkle className="h-4 w-4" weight="fill" />
                 Start building for free
               </Button>
@@ -190,7 +201,7 @@ export default async function LandingPage() {
                 step: "01",
                 icon: FileText,
                 title: "Describe your offer",
-                desc: "Fill in your product title, target audience, key features, and pricing. Plain language — no marketing expertise needed.",
+                desc: "Fill in your product title, target audience, key features, and pricing. Plain language no marketing expertise needed.",
               },
               {
                 icon: Robot,
@@ -218,7 +229,9 @@ export default async function LandingPage() {
                   </div>
                 </div>
                 <h3 className="mb-2 text-base font-semibold">{title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{desc}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {desc}
+                </p>
               </div>
             ))}
           </div>
@@ -236,7 +249,8 @@ export default async function LandingPage() {
               Everything you need to sell online
             </h2>
             <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
-              Pagenify handles the design, copy, and publishing — so you can focus on your product.
+              Pagenify handles the design, copy, and publishing so you can focus
+              on your product.
             </p>
           </div>
 
@@ -245,7 +259,7 @@ export default async function LandingPage() {
               {
                 icon: MagicWand,
                 title: "AI Copywriting",
-                desc: "GPT-powered copy tailored to your product and audience. Headlines, benefits, pricing, FAQs — all generated automatically.",
+                desc: "GPT-powered copy tailored to your product and audience. Headlines, benefits, pricing, FAQs all generated automatically.",
               },
               {
                 icon: PaintBrush,
@@ -260,7 +274,7 @@ export default async function LandingPage() {
               {
                 icon: AppWindow,
                 title: "Structured sections",
-                desc: "Hero, benefits, features, pricing, testimonials, FAQ, and CTA — all composed and ordered automatically.",
+                desc: "Hero, benefits, features, pricing, testimonials, FAQ, and CTA all composed and ordered automatically.",
               },
               {
                 icon: Lightning,
@@ -281,7 +295,9 @@ export default async function LandingPage() {
                   <Icon className="h-4 w-4 text-primary" />
                 </div>
                 <h3 className="mb-1.5 text-sm font-semibold">{title}</h3>
-                <p className="text-xs leading-relaxed text-muted-foreground">{desc}</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {desc}
+                </p>
               </div>
             ))}
           </div>
@@ -292,19 +308,23 @@ export default async function LandingPage() {
       <section className="relative py-20">
         <div className="mx-auto max-w-6xl px-5">
           <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-violet-500/5 p-12 text-center sm:p-16">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+            >
               <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
             </div>
             <div className="relative">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-1.5 text-xs font-medium text-primary">
                 <Sparkle className="h-3 w-3" weight="fill" />
-                Start for free — no credit card
+                Start now for free !
               </div>
               <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
                 Ready to build your first page?
               </h2>
               <p className="mx-auto mb-8 max-w-sm text-sm text-muted-foreground sm:text-base">
-                Join creators using Pagenify to launch products faster than ever before.
+                Join creators using Pagenify to launch products faster than ever
+                before.
               </p>
               <Link href={user ? "/dashboard/pages/new" : "/register"}>
                 <Button size="lg" className="h-11 gap-2 px-8 font-semibold">
@@ -325,9 +345,12 @@ export default async function LandingPage() {
           <div className="flex flex-col gap-8 py-12 sm:flex-row sm:justify-between">
             {/* Brand */}
             <div className="max-w-xs">
-              <span className="text-base font-semibold tracking-tight">Pagenify</span>
+              <span className="text-base font-semibold tracking-tight">
+                Pagenify
+              </span>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                AI-powered sales pages built for creators, makers, and founders who want to sell faster.
+                AI-powered sales pages built for creators, makers, and founders
+                who want to sell faster.
               </p>
             </div>
 
@@ -337,10 +360,31 @@ export default async function LandingPage() {
                 Product
               </p>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/register" className="transition-colors hover:text-foreground">Get started</Link></li>
-                <li><Link href="/login" className="transition-colors hover:text-foreground">Sign in</Link></li>
+                <li>
+                  <Link
+                    href="/register"
+                    className="transition-colors hover:text-foreground"
+                  >
+                    Get started
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/login"
+                    className="transition-colors hover:text-foreground"
+                  >
+                    Sign in
+                  </Link>
+                </li>
                 {user && (
-                  <li><Link href="/dashboard" className="transition-colors hover:text-foreground">Dashboard</Link></li>
+                  <li>
+                    <Link
+                      href="/dashboard"
+                      className="transition-colors hover:text-foreground"
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
                 )}
               </ul>
             </div>
@@ -348,8 +392,12 @@ export default async function LandingPage() {
 
           {/* Bottom bar */}
           <div className="flex flex-col items-center justify-between gap-3 border-t border-border/30 py-5 text-xs text-muted-foreground sm:flex-row">
-            <p>© {new Date().getFullYear()} Teuku Sulthan. All rights reserved.</p>
-            <p className="text-muted-foreground/50">Pagenify — Build smarter, sell faster.</p>
+            <p>
+              © {new Date().getFullYear()} Teuku Sulthan. All rights reserved.
+            </p>
+            <p className="text-muted-foreground/50">
+              Pagenify — Build smarter, sell faster.
+            </p>
           </div>
         </div>
       </footer>
