@@ -1,92 +1,35 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { toast } from "sonner";
-import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
-import { PageBuilderForm } from "@/components/page-builder/page-builder-form";
-import { usePreviewStore } from "@/store/preview.store";
-import type { PageFormInput } from "@/lib/validations/page.schema";
+import { notFound, redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { getPageById } from "@/lib/services/page.service";
+import { EditPageClient } from "./edit-client";
 import type { PageItem } from "@/types/page";
 
-export default function EditPagePage() {
-  const router = useRouter();
-  const params = useParams();
-  const [page, setPage] = useState<PageItem | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { setGeneratedHtml } = usePreviewStore();
+interface EditPageProps {
+  params: Promise<{ id: string }>;
+}
 
-  useEffect(() => {
-    async function fetchPage() {
-      try {
-        const res = await fetch(`/api/pages/${params.id}`);
-        const result = await res.json();
+export default async function EditPagePage({ params }: EditPageProps) {
+  const { id } = await params;
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
-        if (result.success) {
-          const pageData = result.data.page;
-          setPage(pageData);
-          if (pageData.generatedHtml) {
-            setGeneratedHtml(pageData.generatedHtml);
-          }
-        } else {
-          toast.error(result.message);
-          router.push("/dashboard");
-        }
-      } catch {
-        toast.error("Failed to load page");
-        router.push("/dashboard");
-      } finally {
-        setLoading(false);
-      }
-    }
+  let page: PageItem;
 
-    fetchPage();
-  }, [params.id, router, setGeneratedHtml]);
-
-  async function handleSubmit(
-    data: PageFormInput & { generatedHtml: string }
-  ) {
-    try {
-      const res = await fetch(`/api/pages/${params.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        toast.success("Page updated");
-        router.push("/dashboard");
-        router.refresh();
-      } else {
-        toast.error(result.message);
-      }
-    } catch {
-      toast.error("Failed to update page");
-    }
+  try {
+    const raw = await getPageById(id, user.id);
+    page = {
+      ...raw,
+      status: raw.status as PageItem["status"],
+      targetAudience: raw.targetAudience as unknown as string[],
+      priceDisplay: raw.priceDisplay as unknown as string[],
+      keyFeatures: raw.keyFeatures as unknown as string[],
+      uniqueSellingPoints: raw.uniqueSellingPoints as unknown as string[],
+      createdAt: raw.createdAt.toISOString(),
+      updatedAt: raw.updatedAt.toISOString(),
+    };
+  } catch {
+    notFound();
   }
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <CircleNotch className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
-          <p className="mt-3 text-sm text-muted-foreground">Loading page...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!page) return null;
-
-  return (
-    <PageBuilderForm
-      initialData={page}
-      onSubmit={handleSubmit}
-      submitLabel="Save Changes"
-      submitLoadingLabel="Saving..."
-      headerTitle={`Edit: ${page.title}`}
-    />
-  );
+  return <EditPageClient page={page} />;
 }

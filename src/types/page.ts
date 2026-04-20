@@ -26,3 +26,15 @@ export interface PageItem {
   updatedAt: string;
   userId: string;
 }
+
+export type PageListItem = Pick<
+  PageItem,
+  | "id"
+  | "slug"
+  | "title"
+  | "description"
+  | "generatedHtml"
+  | "status"
+  | "createdAt"
+  | "updatedAt"
+>;

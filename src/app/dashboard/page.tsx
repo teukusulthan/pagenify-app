@@ -1,26 +1,24 @@
 import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { prisma } from "@/lib/prisma";
+import { getActivePages } from "@/lib/services/page.service";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { PageList } from "@/components/dashboard/page-list";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
+import type { PageListItem } from "@/types/page";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const pages = await prisma.page.findMany({
-    where: { userId: user.id, status: "ACTIVE" },
-    orderBy: { updatedAt: "desc" },
-  });
+  const pages = await getActivePages(user.id);
 
   const serializedPages = pages.map((p) => ({
     ...p,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
-  }));
+  })) as PageListItem[];
 
   return (
     <div className="min-h-screen bg-background">

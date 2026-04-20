@@ -4,13 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowSquareOut, PencilSimple, Trash } from "@phosphor-icons/react/dist/ssr";
+import {
+  ArrowSquareOut,
+  CircleNotch,
+  PencilSimple,
+  Trash,
+} from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils/date";
 import { PageThumbnail } from "./page-thumbnail";
-import type { PageItem } from "@/types/page";
+import type { PageListItem } from "@/types/page";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,16 +36,18 @@ import {
 } from "@/components/ui/dialog";
 
 interface PageCardProps {
-  page: PageItem;
+  page: PageListItem;
   username: string;
 }
 
 export function PageCard({ page, username }: PageCardProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const publicUrl = `/u/${username}/${page.slug}`;
 
   async function handleDelete() {
+    setIsDeleting(true);
     try {
       const res = await fetch(`/api/pages/${page.id}/archive`, {
         method: "POST",
@@ -56,6 +63,8 @@ export function PageCard({ page, username }: PageCardProps) {
       }
     } catch {
       toast.error("Delete failed");
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -64,15 +73,15 @@ export function PageCard({ page, username }: PageCardProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group block w-full overflow-hidden rounded-xl border bg-card p-0 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="group flex h-full w-full flex-col overflow-hidden rounded-xl border bg-card p-0 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        <div className="p-2 pb-0">
+        <div className="shrink-0 p-2 pb-0">
           <div className="overflow-hidden rounded-lg border bg-background">
             <PageThumbnail html={page.generatedHtml} />
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="flex flex-1 flex-col p-4">
           <div className="mb-2 flex items-start justify-between gap-2">
             <CardTitle className="text-sm font-semibold leading-tight">
               {page.title}
@@ -93,7 +102,12 @@ export function PageCard({ page, username }: PageCardProps) {
         </div>
       </button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(val) => {
+          if (!isDeleting) setOpen(val);
+        }}
+      >
         <DialogContent
           className="max-w-xl p-0 sm:max-w-xl"
           showCloseButton={false}
@@ -176,7 +190,7 @@ export function PageCard({ page, username }: PageCardProps) {
                 <AlertDialogTrigger
                   render={
                     <Button
-                      variant="outline"
+                      variant="destructive"
                       size="sm"
                       className="h-8 w-full text-xs sm:w-auto"
                     >
@@ -195,9 +209,26 @@ export function PageCard({ page, username }: PageCardProps) {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete}>
-                      Delete
+                    <AlertDialogCancel disabled={isDeleting}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      disabled={isDeleting}
+                      onClick={handleDelete}
+                      className="min-w-24 gap-1.5"
+                    >
+                      {isDeleting ? (
+                        <>
+                          <CircleNotch className="h-3.5 w-3.5 animate-spin" />
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <Trash className="h-3.5 w-3.5" />
+                          Delete
+                        </>
+                      )}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>

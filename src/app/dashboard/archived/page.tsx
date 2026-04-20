@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { prisma } from "@/lib/prisma";
+import { getArchivedPages } from "@/lib/services/page.service";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
@@ -11,14 +11,10 @@ export default async function ArchivedPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const pages = await prisma.page.findMany({
-    where: { userId: user.id, status: "ARCHIVED" },
-    orderBy: { updatedAt: "desc" },
-  });
+  const pages = await getArchivedPages(user.id);
 
   const serializedPages = pages.map((p) => ({
     ...p,
-    createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
   }));
 

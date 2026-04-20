@@ -8,10 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "./empty-state";
 import { formatDate } from "@/lib/utils/date";
-import type { PageItem } from "@/types/page";
+
+type ArchivedPageListItem = {
+  id: string;
+  title: string;
+  updatedAt: string;
+};
 
 interface ArchivedPageListProps {
-  pages: PageItem[];
+  pages: ArchivedPageListItem[];
 }
 
 export function ArchivedPageList({ pages }: ArchivedPageListProps) {

@@ -198,13 +198,93 @@ ${CSS_MARKETPLACE}
 </style>
 
 ## BRAND PERSONALITY & COLOR THEMING
-Adapt the color palette to fit the offer's world. Override --primary, --primary-dark, --accent etc. as needed:
-- Digital course / knowledge product → warm amber or deep teal
-- SaaS / productivity tool → clean blue or violet
-- Creative asset / template → bold coral or emerald
-- Health / lifestyle / coaching → earthy green or warm rose
-- Finance / business tool → confident navy or charcoal
-- Marketplace listing (general) → keep the default indigo
+
+Every product category carries an emotional register. Your palette must feel *native* to the buyer's world — not generic. At minimum, override --primary, --primary-dark, --primary-light, and --accent. Strong pages also tune --bg-light, --bg-section, and --text-heading for a fully immersive feel.
+
+### The accent color's role
+--accent is NOT a secondary primary. It exists to create vivid, energising contrast. Apply it to:
+- .stat-value numbers (power and emphasis)
+- .benefit-icon and .step-number background tints (8–12% opacity of accent)
+- Animated underlines or decorative highlights within hero headlines
+- .notice-bar border and text
+- Hover micro-states on interactive cards and links
+The accent should make the page feel alive where the primary provides structure.
+
+### Category → Palette (set these CSS variable values in :root)
+Pick the closest matching category. If the offer spans multiple, favour the primary emotional need of the buyer.
+
+**Digital course / e-learning / knowledge product**
+- --primary: #d97706 (deep amber) | --primary-dark: #b45309 | --primary-light: #fbbf24
+- --accent: #06b6d4 (electric teal)
+- Mood: warm mastery paired with cool, sharp clarity
+
+**Productivity app / SaaS / workflow tool**
+- --primary: #7c3aed (violet) | --primary-dark: #6d28d9 | --primary-light: #a78bfa
+- --accent: #84cc16 (electric lime)
+- Mood: focused power with forward momentum
+
+**Developer tool / API / technical product**
+- --primary: #2563eb (electric blue) | --primary-dark: #1d4ed8 | --primary-light: #60a5fa
+- --accent: #22d3ee (cyan)
+- Mood: precision and speed — clinical, not cold
+
+**AI / automation / ML tool**
+- --primary: #5b21b6 (deep purple) | --primary-dark: #4c1d95 | --primary-light: #8b5cf6
+- --accent: #06b6d4 (cyan)
+- Mood: futuristic intelligence with human warmth
+
+**Creative asset / templates / design kit**
+- --primary: #e11d48 (hot coral) | --primary-dark: #be123c | --primary-light: #fb7185
+- --accent: #f59e0b (saffron)
+- Mood: bold, expressive creativity with vibrant energy
+
+**UI kit / design system / Figma resource**
+- --primary: #4f46e5 (indigo) | --primary-dark: #4338ca | --primary-light: #818cf8
+- --accent: #ec4899 (hot pink)
+- Mood: craft, delight, and aesthetic confidence
+
+**Photography / videography / media**
+- --primary: #1c1917 (rich charcoal) | --primary-dark: #0c0a09 | --primary-light: #44403c
+- --accent: #38bdf8 (sky blue)
+- Mood: artistry and cinematic edge
+
+**Health / wellness / fitness**
+- --primary: #16a34a (forest green) | --primary-dark: #15803d | --primary-light: #4ade80
+- --accent: #fb923c (warm peach)
+- Mood: vitality, growth, and organic warmth
+
+**Coaching / personal development / mindset**
+- --primary: #be185d (deep rose) | --primary-dark: #9d174d | --primary-light: #f472b6
+- --accent: #eab308 (gold)
+- Mood: transformation, premium self-investment
+
+**Finance / business strategy / investment**
+- --primary: #1e3a5f (deep navy) | --primary-dark: #162c4a | --primary-light: #3b82f6
+- --accent: #0d9488 (teal)
+- Mood: authority, clarity, and forward-thinking confidence
+
+**E-commerce / physical product / merchandise**
+- --primary: #7e22ce (rich plum) | --primary-dark: #6b21a8 | --primary-light: #c084fc
+- --accent: #d97706 (copper)
+- Mood: premium desire with tactile warmth
+
+**Freelance service / agency / consulting**
+- --primary: #0f172a (near-black midnight) | --primary-dark: #020617 | --primary-light: #334155
+- --accent: #22d3ee (electric cyan)
+- Mood: professional authority with fresh, modern edge
+
+**Community / membership / subscription**
+- --primary: #ea580c (warm orange) | --primary-dark: #c2410c | --primary-light: #fb923c
+- --accent: #38bdf8 (sky blue)
+- Mood: belonging, openness, and shared energy
+
+**Marketplace listing (general / uncategorised)**
+- Keep default: --primary: #4f46e5 | --accent: #06b6d4
+
+### Hero background derivation rule
+Always derive the hero gradient from the chosen primary — never use a flat white background:
+background: linear-gradient(135deg, #f8fafc 0%, rgba(PRIMARY_HEX, 0.07) 100%);
+Replace PRIMARY_HEX with the actual hex of --primary for that brand.
 
 ## PAGE STRUCTURE — Build 6 to 8 sections
 The page MUST open with the hero. Choose remaining sections based on what best serves this specific offer. Not all sections are required — choose thoughtfully.
@@ -307,7 +387,7 @@ ${imageInstruction}
 ## Creative Direction for This Page
 
 1. **Headline**: Rewrite the title as a specific outcome statement for the target audience — do NOT use the raw title as the hero heading.
-2. **Color theme**: Choose a color palette that fits this offer type and audience. Override the CSS variables if indigo doesn't suit this product's personality.
+2. **Color theme**: Match the offer to one of the product categories in the BRAND PERSONALITY section and apply that category's full palette. Override --primary, --primary-dark, --primary-light, and --accent at minimum. Apply --accent to .stat-value numbers, .benefit-icon tints, .notice-bar border/text, and hero headline highlight spans — never use it as a button background. Derive the hero section gradient from the chosen primary hex at 7% opacity. The result should feel like the palette was designed *for* this product, not borrowed from a generic template.
 3. **Sections**: Select 6–8 sections from the system. Prioritize sections that address the biggest buyer objections and desires for this specific offer type.
 4. **Testimonials**: Write 3 placeholder testimonials that sound authentic to this audience. Use specific numbers and emotional language. Placeholder names should feel real and relevant to the target market.
 5. **Animations**: Apply fade-up classes to the hero elements for a polished entrance effect.

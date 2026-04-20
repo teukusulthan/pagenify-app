@@ -6,10 +6,28 @@ import type {
   UpdatePageInput,
 } from "@/lib/validations/page.schema";
 
+const PAGE_LIST_SELECT = {
+  id: true,
+  slug: true,
+  title: true,
+  description: true,
+  generatedHtml: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
+const ARCHIVED_LIST_SELECT = {
+  id: true,
+  title: true,
+  updatedAt: true,
+} as const;
+
 export async function getActivePages(userId: string) {
   return prisma.page.findMany({
     where: { userId, status: "ACTIVE" },
     orderBy: { updatedAt: "desc" },
+    select: PAGE_LIST_SELECT,
   });
 }
 
@@ -17,6 +35,7 @@ export async function getArchivedPages(userId: string) {
   return prisma.page.findMany({
     where: { userId, status: "ARCHIVED" },
     orderBy: { updatedAt: "desc" },
+    select: ARCHIVED_LIST_SELECT,
   });
 }
 

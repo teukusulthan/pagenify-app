@@ -4,6 +4,7 @@ import { getPageById } from "@/lib/services/page.service";
 import { pageFormSchema } from "@/lib/validations/page.schema";
 import { generateWithTier } from "@/lib/services/llm.service";
 import { sanitizeHtmlContent } from "@/lib/services/html.service";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 import {
   apiSuccess,
   apiError,
@@ -16,11 +17,15 @@ const VALID_TIERS: ModelTier[] = ["fast", "medium", "think"];
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
     const user = await requireAuth();
+
+    if (!checkRateLimit(`preview:${user.id}`, 5, 60_000)) {
+      return apiError("Too many requests. Please wait before generating again.", "RATE_LIMITED", 429);
+    }
 
     await getPageById(id, user.id);
 
@@ -44,7 +49,7 @@ export async function POST(
         uniqueSellingPoints: parsed.data.uniqueSellingPoints,
         productImageUrl: parsed.data.productImageUrl ?? null,
       },
-      tier
+      tier,
     );
 
     const safeHtml = sanitizeHtmlContent(html);
