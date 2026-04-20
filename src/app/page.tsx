@@ -332,29 +332,17 @@ export default async function LandingPage() {
             </div>
 
             {/* Links */}
-            <div className="flex gap-16">
-              <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
-                  Product
-                </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><Link href="/register" className="transition-colors hover:text-foreground">Get started</Link></li>
-                  <li><Link href="/login" className="transition-colors hover:text-foreground">Sign in</Link></li>
-                  {user && (
-                    <li><Link href="/dashboard" className="transition-colors hover:text-foreground">Dashboard</Link></li>
-                  )}
-                </ul>
-              </div>
-              <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
-                  Built with
-                </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="cursor-default">Next.js</li>
-                  <li className="cursor-default">Tailwind CSS</li>
-                  <li className="cursor-default">AI / GLM</li>
-                </ul>
-              </div>
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                Product
+              </p>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/register" className="transition-colors hover:text-foreground">Get started</Link></li>
+                <li><Link href="/login" className="transition-colors hover:text-foreground">Sign in</Link></li>
+                {user && (
+                  <li><Link href="/dashboard" className="transition-colors hover:text-foreground">Dashboard</Link></li>
+                )}
+              </ul>
             </div>
           </div>
 
