@@ -48,6 +48,41 @@ import type { PageItem } from "@/types/page";
 const PREVIEW_WIDTH = 1920;
 const PREVIEW_HEIGHT = 1080;
 
+const SPINNER_VERBS = [
+  "Accomplishing","Actioning","Actualizing","Architecting","Baking","Beaming",
+  "Beboppin'","Befuddling","Billowing","Blanching","Bloviating","Boogieing",
+  "Boondoggling","Booping","Bootstrapping","Brewing","Bunning","Burrowing",
+  "Calculating","Canoodling","Caramelizing","Cascading","Catapulting","Cerebrating",
+  "Channeling","Channelling","Choreographing","Churning","Clauding","Coalescing",
+  "Cogitating","Combobulating","Composing","Computing","Concocting","Considering",
+  "Contemplating","Cooking","Crafting","Creating","Crunching","Crystallizing",
+  "Cultivating","Deciphering","Deliberating","Determining","Dilly-dallying",
+  "Discombobulating","Doing","Doodling","Drizzling","Ebbing","Effecting",
+  "Elucidating","Embellishing","Enchanting","Envisioning","Evaporating","Fermenting",
+  "Fiddle-faddling","Finagling","Flambéing","Flibbertigibbeting","Flowing",
+  "Flummoxing","Fluttering","Forging","Forming","Frolicking","Frosting",
+  "Gallivanting","Galloping","Garnishing","Generating","Gesticulating","Germinating",
+  "Gitifying","Grooving","Gusting","Harmonizing","Hashing","Hatching","Herding",
+  "Honking","Hullaballooing","Hyperspacing","Ideating","Imagining","Improvising",
+  "Incubating","Inferring","Infusing","Ionizing","Jitterbugging","Julienning",
+  "Kneading","Leavening","Levitating","Lollygagging","Manifesting","Marinating",
+  "Meandering","Metamorphosing","Misting","Moonwalking","Moseying","Mulling",
+  "Mustering","Musing","Nebulizing","Nesting","Newspapering","Noodling","Nucleating",
+  "Orbiting","Orchestrating","Osmosing","Perambulating","Percolating","Perusing",
+  "Philosophising","Photosynthesizing","Pollinating","Pondering","Pontificating",
+  "Pouncing","Precipitating","Prestidigitating","Processing","Proofing","Propagating",
+  "Puttering","Puzzling","Quantumizing","Razzle-dazzling","Razzmatazzing",
+  "Recombobulating","Reticulating","Roosting","Ruminating","Sautéing","Scampering",
+  "Schlepping","Scurrying","Seasoning","Shenaniganing","Shimmying","Simmering",
+  "Skedaddling","Sketching","Slithering","Smooshing","Sock-hopping","Spelunking",
+  "Spinning","Sprouting","Stewing","Sublimating","Swirling","Swooping","Symbioting",
+  "Synthesizing","Tempering","Thinking","Thundering","Tinkering","Tomfoolering",
+  "Topsy-turvying","Transfiguring","Transmuting","Twisting","Undulating","Unfurling",
+  "Unravelling","Vibing","Waddling","Wandering","Warping","Whatchamacalliting",
+  "Whirlpooling","Whirring","Whisking","Wibbling","Working","Wrangling","Zesting",
+  "Zigzagging",
+];
+
 interface PageBuilderFormProps {
   initialData?: Partial<PageItem>;
   onSubmit: (data: PageFormInput & { generatedHtml: string }) => Promise<void>;
@@ -70,9 +105,19 @@ export function PageBuilderForm({
   const [submitting, setSubmitting] = useState(false);
   const [modelTier, setModelTier] = useState<ModelTier>("medium");
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
+  const [verbIndex, setVerbIndex] = useState(0);
   const { generatedHtml, setGeneratedHtml } = usePreviewStore();
   const previewRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.45);
+
+  useEffect(() => {
+    if (!generating) return;
+    setVerbIndex(Math.floor(Math.random() * SPINNER_VERBS.length));
+    const id = setInterval(() => {
+      setVerbIndex((i) => (i + 1) % SPINNER_VERBS.length);
+    }, 2000);
+    return () => clearInterval(id);
+  }, [generating]);
 
   const computeScale = useCallback(() => {
     if (previewRef.current) {
@@ -390,7 +435,7 @@ export function PageBuilderForm({
               {generating ? (
                 <>
                   <CircleNotch className="h-4 w-4 animate-spin" />
-                  Generating...
+                  {SPINNER_VERBS[verbIndex]}...
                 </>
               ) : generatedHtml ? (
                 <>
@@ -422,7 +467,7 @@ export function PageBuilderForm({
                 {generating && (
                   <span className="inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 text-xs font-normal text-primary">
                     <CircleNotch className="h-3 w-3 animate-spin" />
-                    Generating...
+                    {SPINNER_VERBS[verbIndex]}...
                   </span>
                 )}
               </div>
