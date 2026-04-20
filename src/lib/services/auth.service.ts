@@ -51,12 +51,12 @@ export async function loginUser(
   });
 
   if (!user) {
-    throw new UnauthorizedError("Invalid credentials");
+    throw new UnauthorizedError("No account found with that email address");
   }
 
   const passwordMatch = await bcrypt.compare(input.password, user.passwordHash);
   if (!passwordMatch) {
-    throw new UnauthorizedError("Invalid credentials");
+    throw new UnauthorizedError("Incorrect password");
   }
 
   const token = await signJwt({

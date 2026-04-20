@@ -25,6 +25,7 @@ export function RegisterForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -43,11 +44,18 @@ export function RegisterForm() {
       const result = await res.json();
 
       if (!result.success) {
-        toast.error(result.message);
+        const msg: string = result.message ?? "Registration failed";
+        if (msg.toLowerCase().includes("email")) {
+          setError("email", { message: msg });
+        } else if (msg.toLowerCase().includes("username")) {
+          setError("username", { message: msg });
+        } else {
+          toast.error(msg);
+        }
         return;
       }
 
-      toast.success("Registration successful");
+      toast.success("Account created");
       router.push("/dashboard");
       router.refresh();
     } catch {

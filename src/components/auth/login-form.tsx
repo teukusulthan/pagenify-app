@@ -21,6 +21,7 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -39,7 +40,14 @@ export function LoginForm() {
       const result = await res.json();
 
       if (!result.success) {
-        toast.error(result.message);
+        const msg: string = result.message ?? "Login failed";
+        if (msg.toLowerCase().includes("email") || msg.toLowerCase().includes("account")) {
+          setError("email", { message: msg });
+        } else if (msg.toLowerCase().includes("password") || msg.toLowerCase().includes("incorrect")) {
+          setError("password", { message: msg });
+        } else {
+          toast.error(msg);
+        }
         return;
       }
 
