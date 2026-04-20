@@ -44,10 +44,21 @@ export function stripPreHeroContent(html: string): string {
 export function sanitizeHtmlContent(html: string): string {
   const stripped = stripPreHeroContent(html);
 
-  return sanitizeHtml(stripped, {
+  // Extract <style> blocks before sanitizing — sanitize-html's nonTextTags
+  // mechanism discards content inside <style> (and anything inside <head>),
+  // so we lift the CSS out first and re-inject it after sanitization.
+  const styleBlocks: string[] = [];
+  const htmlWithoutStyles = stripped.replace(
+    /<style[^>]*>([\s\S]*?)<\/style>/gi,
+    (_match, css: string) => {
+      styleBlocks.push(css);
+      return "";
+    }
+  );
+
+  const sanitized = sanitizeHtml(htmlWithoutStyles, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat([
       "img",
-      "style",
       "section",
       "article",
       "header",
@@ -57,15 +68,7 @@ export function sanitizeHtmlContent(html: string): string {
       "figure",
       "figcaption",
     ]),
-    nonTextTags: [
-      "style",
-      "script",
-      "textarea",
-      "option",
-      "noscript",
-      "title",
-      "head",
-    ],
+    nonTextTags: ["script", "textarea", "option", "noscript"],
     allowedAttributes: {
       ...sanitizeHtml.defaults.allowedAttributes,
       "*": ["class", "style", "id"],
@@ -74,6 +77,19 @@ export function sanitizeHtmlContent(html: string): string {
     },
     allowedSchemes: ["http", "https", "mailto"],
   });
+
+  if (styleBlocks.length === 0) return sanitized;
+
+  const combinedCss = styleBlocks.join("\n");
+  const styleTag = `<style>${combinedCss}</style>`;
+
+  if (sanitized.includes("</head>")) {
+    return sanitized.replace("</head>", `${styleTag}</head>`);
+  }
+  if (sanitized.includes("<body")) {
+    return sanitized.replace(/<body[^>]*>/, (m) => `${styleTag}${m}`);
+  }
+  return styleTag + sanitized;
 }
 
 // Alias for shorter imports
