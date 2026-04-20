@@ -319,21 +319,49 @@ export default async function LandingPage() {
       </section>
 
       {/* ─── Footer ─── */}
-      <footer className="border-t border-border/30 py-8">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <span className="text-sm font-semibold">Pagenify</span>
-            <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Pagenify. Build smarter, sell faster.
-            </p>
-            <div className="flex items-center gap-5 text-xs text-muted-foreground">
-              <Link href="/login" className="transition-colors hover:text-foreground">
-                Sign in
-              </Link>
-              <Link href="/register" className="transition-colors hover:text-foreground">
-                Register
-              </Link>
+      <footer className="border-t border-border/30 bg-card/20">
+        <div className="mx-auto max-w-7xl px-5">
+          {/* Top row */}
+          <div className="flex flex-col gap-8 py-12 sm:flex-row sm:justify-between">
+            {/* Brand */}
+            <div className="max-w-xs">
+              <span className="text-base font-semibold tracking-tight">Pagenify</span>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                AI-powered sales pages built for creators, makers, and founders who want to sell faster.
+              </p>
             </div>
+
+            {/* Links */}
+            <div className="flex gap-16">
+              <div>
+                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  Product
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li><Link href="/register" className="transition-colors hover:text-foreground">Get started</Link></li>
+                  <li><Link href="/login" className="transition-colors hover:text-foreground">Sign in</Link></li>
+                  {user && (
+                    <li><Link href="/dashboard" className="transition-colors hover:text-foreground">Dashboard</Link></li>
+                  )}
+                </ul>
+              </div>
+              <div>
+                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  Built with
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="cursor-default">Next.js</li>
+                  <li className="cursor-default">Tailwind CSS</li>
+                  <li className="cursor-default">AI / GLM</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="flex flex-col items-center justify-between gap-3 border-t border-border/30 py-5 text-xs text-muted-foreground sm:flex-row">
+            <p>© {new Date().getFullYear()} Teuku Sulthan. All rights reserved.</p>
+            <p className="text-muted-foreground/50">Pagenify — Build smarter, sell faster.</p>
           </div>
         </div>
       </footer>
