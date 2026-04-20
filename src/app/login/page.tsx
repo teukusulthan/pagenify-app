@@ -6,8 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { APP_NAME } from "@/lib/constants/app";
-
 export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-8">
@@ -20,11 +18,6 @@ export default function LoginPage() {
       </div>
 
       <div className="relative w-full max-w-[26rem]">
-        <div className="mb-6">
-          <span className="text-sm font-semibold tracking-tight text-foreground">
-            {APP_NAME}
-          </span>
-        </div>
 
         <Card className="border-border/40 bg-card/80 shadow-xl backdrop-blur-sm">
           <CardHeader className="px-6 pt-6 pb-4">
