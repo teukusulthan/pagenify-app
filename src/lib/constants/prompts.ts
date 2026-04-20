@@ -262,12 +262,18 @@ export function buildUserPrompt(input: {
   offerType: string;
   title: string;
   description: string;
-  targetAudience: string;
-  priceDisplay: string;
+  targetAudience: string | string[];
+  priceDisplay: string | string[];
   keyFeatures: string[];
   uniqueSellingPoints: string[];
   productImageUrl: string | null;
 }): string {
+  const targetAudienceStr = Array.isArray(input.targetAudience)
+    ? input.targetAudience.join(", ")
+    : input.targetAudience;
+  const priceDisplayStr = Array.isArray(input.priceDisplay)
+    ? input.priceDisplay.join(", ")
+    : input.priceDisplay;
   const imageInstruction = input.productImageUrl
     ? `Product image URL (place in the hero-image div as an <img>):\n${input.productImageUrl}`
     : "No product image provided — omit the hero-image div entirely.";
@@ -287,8 +293,8 @@ export function buildUserPrompt(input: {
 Type: ${input.offerType}
 Title: ${input.title}
 Description: ${input.description}
-Target audience: ${input.targetAudience}
-Price: ${input.priceDisplay}
+Target audience: ${targetAudienceStr}
+Price: ${priceDisplayStr}
 
 ## Key Features (expand each into a detailed feature card or included-list item)
 ${features}

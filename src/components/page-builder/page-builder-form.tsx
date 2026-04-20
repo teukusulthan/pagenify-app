@@ -162,8 +162,8 @@ export function PageBuilderForm({
     defaultValues: {
       title: initialData?.title ?? "",
       description: initialData?.description ?? "",
-      targetAudience: initialData?.targetAudience ?? "",
-      priceDisplay: initialData?.priceDisplay ?? "",
+      targetAudience: initialData?.targetAudience ?? [],
+      priceDisplay: initialData?.priceDisplay ?? [],
       keyFeatures: initialData?.keyFeatures ?? [],
       uniqueSellingPoints: initialData?.uniqueSellingPoints ?? [],
       productImageUrl: initialData?.productImageUrl ?? null,
@@ -385,31 +385,33 @@ export function PageBuilderForm({
               </FormSection>
 
               <FormSection icon={Users} title="Target Market">
-                <FormField
-                  label="Target Audience"
-                  htmlFor="targetAudience"
-                  hint="Who is this for?"
-                  error={errors.targetAudience?.message}
-                >
-                  <Input
-                    id="targetAudience"
-                    placeholder="e.g. Small business owners, freelancers"
-                    {...register("targetAudience")}
-                  />
-                </FormField>
+                <Controller
+                  name="targetAudience"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiInputField
+                      label="Target Audience"
+                      values={field.value}
+                      onChange={field.onChange}
+                      error={errors.targetAudience?.message}
+                      placeholder="e.g. Small business owners"
+                    />
+                  )}
+                />
 
-                <FormField
-                  label="Price Display"
-                  htmlFor="priceDisplay"
-                  hint="How should the price appear?"
-                  error={errors.priceDisplay?.message}
-                >
-                  <Input
-                    id="priceDisplay"
-                    placeholder="e.g. $49 one-time, $19/mo"
-                    {...register("priceDisplay")}
-                  />
-                </FormField>
+                <Controller
+                  name="priceDisplay"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiInputField
+                      label="Price Display"
+                      values={field.value}
+                      onChange={field.onChange}
+                      error={errors.priceDisplay?.message}
+                      placeholder="e.g. $49 one-time"
+                    />
+                  )}
+                />
               </FormSection>
 
               <FormSection icon={Sparkles} title="Product Details">

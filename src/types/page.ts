@@ -3,8 +3,8 @@ export type PageStatus = "ACTIVE" | "ARCHIVED";
 export interface PageFormData {
   title: string;
   description: string;
-  targetAudience: string;
-  priceDisplay: string;
+  targetAudience: string[];
+  priceDisplay: string[];
   keyFeatures: string[];
   uniqueSellingPoints: string[];
   productImageUrl?: string | null;
@@ -16,8 +16,8 @@ export interface PageItem {
   status: PageStatus;
   title: string;
   description: string;
-  targetAudience: string;
-  priceDisplay: string;
+  targetAudience: string[];
+  priceDisplay: string[];
   keyFeatures: string[];
   uniqueSellingPoints: string[];
   productImageUrl: string | null;

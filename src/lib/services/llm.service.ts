@@ -150,8 +150,8 @@ function stripCodeFences(value: string): string {
 export async function generateSalesHtmlGemini(input: {
   title: string;
   description: string;
-  targetAudience: string;
-  priceDisplay: string;
+  targetAudience: string | string[];
+  priceDisplay: string | string[];
   keyFeatures: string[];
   uniqueSellingPoints: string[];
   productImageUrl: string | null;
@@ -227,8 +227,8 @@ export async function generateSalesHtml(
   input: {
     title: string;
     description: string;
-    targetAudience: string;
-    priceDisplay: string;
+    targetAudience: string | string[];
+    priceDisplay: string | string[];
     keyFeatures: string[];
     uniqueSellingPoints: string[];
     productImageUrl: string | null;
@@ -324,8 +324,8 @@ export async function generateSalesHtml(
 type GenerateInput = {
   title: string;
   description: string;
-  targetAudience: string;
-  priceDisplay: string;
+  targetAudience: string | string[];
+  priceDisplay: string | string[];
   keyFeatures: string[];
   uniqueSellingPoints: string[];
   productImageUrl: string | null;

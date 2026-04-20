@@ -8,10 +8,12 @@ export const pageFormSchema = z.object({
   description: z
     .string()
     .min(20, "Description must be at least 20 characters"),
-  targetAudience: z.string().min(1, "Target audience is required"),
+  targetAudience: z
+    .array(z.string())
+    .min(1, "At least one target audience is required"),
   priceDisplay: z
-    .string()
-    .max(50, "Price display must be at most 50 characters"),
+    .array(z.string())
+    .min(1, "At least one price option is required"),
   keyFeatures: z
     .array(z.string())
     .min(1, "At least one key feature is required"),

@@ -30,8 +30,8 @@ model Page {
   status              PageStatus @default(ACTIVE)
   title               String
   description         String     @db.Text
-  targetAudience      String
-  priceDisplay        String
+  targetAudience      String[]
+  priceDisplay        String[]
   keyFeatures         String[]
   uniqueSellingPoints String[]
   productImageUrl     String?
