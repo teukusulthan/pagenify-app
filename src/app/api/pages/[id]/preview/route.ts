@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth/guards";
 import { getPageById } from "@/lib/services/page.service";
 import { pageFormSchema } from "@/lib/validations/page.schema";
-import { generateSalesHtml } from "@/lib/services/llm.service";
+import { generateWithTier } from "@/lib/services/llm.service";
 import { sanitizeHtmlContent } from "@/lib/services/html.service";
 import {
   apiSuccess,
@@ -10,6 +10,9 @@ import {
   apiValidationError,
 } from "@/lib/utils/api-response";
 import { AppError } from "@/lib/utils/errors";
+import type { ModelTier } from "@/lib/constants/models";
+
+const VALID_TIERS: ModelTier[] = ["fast", "medium", "think"];
 
 export async function POST(
   request: NextRequest,
@@ -22,21 +25,27 @@ export async function POST(
     await getPageById(id, user.id);
 
     const body = await request.json();
-    const parsed = pageFormSchema.safeParse(body);
+    const { modelTier, ...pageData } = body;
+    const tier: ModelTier = VALID_TIERS.includes(modelTier) ? modelTier : "medium";
+
+    const parsed = pageFormSchema.safeParse(pageData);
 
     if (!parsed.success) {
       return apiValidationError(parsed.error.flatten());
     }
 
-    const html = await generateSalesHtml({
-      title: parsed.data.title,
-      description: parsed.data.description,
-      targetAudience: parsed.data.targetAudience,
-      priceDisplay: parsed.data.priceDisplay,
-      keyFeatures: parsed.data.keyFeatures,
-      uniqueSellingPoints: parsed.data.uniqueSellingPoints,
-      productImageUrl: parsed.data.productImageUrl ?? null,
-    });
+    const html = await generateWithTier(
+      {
+        title: parsed.data.title,
+        description: parsed.data.description,
+        targetAudience: parsed.data.targetAudience,
+        priceDisplay: parsed.data.priceDisplay,
+        keyFeatures: parsed.data.keyFeatures,
+        uniqueSellingPoints: parsed.data.uniqueSellingPoints,
+        productImageUrl: parsed.data.productImageUrl ?? null,
+      },
+      tier
+    );
 
     const safeHtml = sanitizeHtmlContent(html);
 

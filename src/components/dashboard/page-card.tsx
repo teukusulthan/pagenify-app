@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ExternalLink, Pencil, Trash2 } from "lucide-react";
+import { ArrowSquareOut, PencilSimple, Trash } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -156,7 +156,7 @@ export function PageCard({ page, username }: PageCardProps) {
                   size="sm"
                   className="h-8 w-full text-xs sm:w-auto"
                 >
-                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                  <ArrowSquareOut className="mr-1.5 h-3.5 w-3.5" />
                   View
                 </Button>
               </Link>
@@ -167,7 +167,7 @@ export function PageCard({ page, username }: PageCardProps) {
                   size="sm"
                   className="h-8 w-full text-xs sm:w-auto"
                 >
-                  <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                  <PencilSimple className="mr-1.5 h-3.5 w-3.5" />
                   Edit
                 </Button>
               </Link>
@@ -180,7 +180,7 @@ export function PageCard({ page, username }: PageCardProps) {
                       size="sm"
                       className="h-8 w-full text-xs sm:w-auto"
                     >
-                      <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                      <Trash className="mr-1.5 h-3.5 w-3.5" />
                       Delete
                     </Button>
                   }

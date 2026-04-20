@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Monitor } from "lucide-react";
+import { Monitor } from "@phosphor-icons/react/dist/ssr";
 
 const PREVIEW_WIDTH = 1920;
 const PREVIEW_HEIGHT = 1080;

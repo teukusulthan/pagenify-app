@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, X } from "lucide-react";
+import { Plus, X } from "@phosphor-icons/react/dist/ssr";
 
 interface MultiInputFieldProps {
   label: string;
@@ -51,7 +51,7 @@ export function MultiInputField({
           }}
         />
         <Button type="button" variant="outline" size="sm" onClick={addValue}>
-          <Plus className="h-4 w-4" />
+          <Plus className="h-4 w-4" weight="bold" />
         </Button>
       </div>
       {values.length > 0 && (
@@ -67,7 +67,7 @@ export function MultiInputField({
                 onClick={() => removeValue(index)}
                 className="text-muted-foreground hover:text-foreground"
               >
-                <X className="h-3 w-3" />
+                <X className="h-3 w-3" weight="bold" />
               </button>
             </span>
           ))}

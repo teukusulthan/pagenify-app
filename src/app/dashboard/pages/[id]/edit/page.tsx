@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { PageBuilderForm } from "@/components/page-builder/page-builder-form";
 import { usePreviewStore } from "@/store/preview.store";
 import type { PageFormInput } from "@/lib/validations/page.schema";
@@ -71,7 +71,7 @@ export default function EditPagePage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+          <CircleNotch className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
           <p className="mt-3 text-sm text-muted-foreground">Loading page...</p>
         </div>
       </div>

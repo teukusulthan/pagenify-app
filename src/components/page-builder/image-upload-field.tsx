@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { toast } from "sonner";
-import { Upload, X } from "lucide-react";
+import { UploadSimple, X } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UPLOAD_CONFIG } from "@/lib/constants/app";
@@ -71,7 +71,7 @@ export function ImageUploadField({ value, onChange }: ImageUploadFieldProps) {
             onClick={() => onChange(null)}
             className="absolute -right-2 -top-2 rounded-full bg-destructive p-1 text-white"
           >
-            <X className="h-3 w-3" />
+            <X className="h-3 w-3" weight="bold" />
           </button>
         </div>
       ) : (
@@ -81,7 +81,7 @@ export function ImageUploadField({ value, onChange }: ImageUploadFieldProps) {
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
         >
-          <Upload className="mr-2 h-4 w-4" />
+          <UploadSimple className="mr-2 h-4 w-4" />
           {uploading ? "Uploading..." : "Upload Image"}
         </Button>
       )}

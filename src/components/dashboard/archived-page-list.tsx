@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { RotateCcw, Trash2 } from "lucide-react";
+import { ArrowCounterClockwise, Trash } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -53,7 +53,7 @@ export function ArchivedPageList({ pages }: ArchivedPageListProps) {
               {page.title}
             </CardTitle>
             <Badge variant="secondary" className="gap-1">
-              <Trash2 className="h-3 w-3" />
+              <Trash className="h-3 w-3" />
               In Trash
             </Badge>
           </CardHeader>
@@ -68,7 +68,7 @@ export function ArchivedPageList({ pages }: ArchivedPageListProps) {
               size="sm"
               onClick={() => handleRecover(page.id)}
             >
-              <RotateCcw className="mr-1 h-3 w-3" />
+              <ArrowCounterClockwise className="mr-1 h-3 w-3" />
               Restore
             </Button>
           </CardContent>

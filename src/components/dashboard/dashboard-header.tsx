@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { LogOut, Trash2, Plus } from "lucide-react";
+import { SignOut, Trash, Plus, Sparkle } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -43,22 +43,25 @@ export function DashboardHeader({ username }: { username: string }) {
   const initials = username.slice(0, 2).toUpperCase();
 
   return (
-    <header className="border-b bg-background">
+    <header className="sticky top-0 z-20 border-b border-border/60 bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link
           href="/dashboard"
-          className="text-lg font-bold tracking-tight text-foreground"
+          className="flex items-center gap-2 text-foreground transition-opacity hover:opacity-80"
         >
-          Pagenify
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/15">
+            <Sparkle className="h-3.5 w-3.5 text-primary" weight="fill" />
+          </div>
+          <span className="text-sm font-semibold tracking-tight">Pagenify</span>
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="/dashboard/archived">
-                <Button variant="ghost" size="sm">
-                  <Trash2 className="mr-1.5 h-3.5 w-3.5" />
-                  Trash Bin
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  <Trash className="mr-1.5 h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Trash</span>
                 </Button>
               </Link>
             </TooltipTrigger>
@@ -66,9 +69,10 @@ export function DashboardHeader({ username }: { username: string }) {
           </Tooltip>
 
           <Link href="/dashboard/pages/new">
-            <Button size="sm">
-              <Plus className="mr-1.5 h-3.5 w-3.5" />
-              Create Page
+            <Button size="sm" className="gap-1.5">
+              <Plus className="h-3.5 w-3.5" weight="bold" />
+              <span className="hidden sm:inline">New Page</span>
+              <span className="sm:hidden">New</span>
             </Button>
           </Link>
 
@@ -82,15 +86,16 @@ export function DashboardHeader({ username }: { username: string }) {
                     {initials}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden sm:inline">{username}</span>
+                <span className="hidden sm:inline text-sm">{username}</span>
               </Button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
+                  <div className="flex flex-col space-y-0.5">
                     <p className="text-sm font-medium">{username}</p>
+                    <p className="text-xs text-muted-foreground">Free plan</p>
                   </div>
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
@@ -98,7 +103,7 @@ export function DashboardHeader({ username }: { username: string }) {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
+                <SignOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>

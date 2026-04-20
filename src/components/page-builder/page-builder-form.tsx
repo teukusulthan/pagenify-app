@@ -7,13 +7,15 @@ import { toast } from "sonner";
 import {
   FileText,
   Users,
-  Sparkles,
-  ImageIcon,
-  Loader2,
+  Sparkle,
+  Image as ImageIcon,
+  CircleNotch,
   Monitor,
-  Download,
-  Sparkles as SparkleIcon,
-} from "lucide-react";
+  DownloadSimple,
+  Lightning,
+  Gauge,
+  Lightbulb,
+} from "@phosphor-icons/react/dist/ssr";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -31,6 +33,8 @@ import {
   pageFormSchema,
   type PageFormInput,
 } from "@/lib/validations/page.schema";
+import { MODEL_OPTIONS, type ModelTier } from "@/lib/constants/models";
+import { cn } from "@/lib/utils";
 import { usePreviewStore } from "@/store/preview.store";
 import { exportHtmlAsFile } from "@/lib/utils/export-html";
 import { Button } from "@/components/ui/button";
@@ -52,6 +56,9 @@ interface PageBuilderFormProps {
   headerTitle: string;
 }
 
+const SparkleIcon = Sparkle;
+const Sparkles = Sparkle;
+
 export function PageBuilderForm({
   initialData,
   onSubmit,
@@ -61,6 +68,8 @@ export function PageBuilderForm({
 }: PageBuilderFormProps) {
   const [generating, setGenerating] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [modelTier, setModelTier] = useState<ModelTier>("medium");
+  const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
   const { generatedHtml, setGeneratedHtml } = usePreviewStore();
   const previewRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.45);
@@ -115,7 +124,7 @@ export function PageBuilderForm({
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, modelTier }),
       });
 
       const result = await res.json();
@@ -181,7 +190,7 @@ export function PageBuilderForm({
                     exportHtmlAsFile(generatedHtml!, filename);
                   }}
                 >
-                  <Download className="h-3.5 w-3.5" />
+                  <DownloadSimple className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">Export HTML</span>
                 </Button>
               </TooltipTrigger>
@@ -197,7 +206,7 @@ export function PageBuilderForm({
             >
               {submitting ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <CircleNotch className="h-3.5 w-3.5 animate-spin" />
                   {submitLoadingLabel}
                 </>
               ) : (
@@ -208,8 +217,38 @@ export function PageBuilderForm({
         </div>
       </header>
 
+      <div className="flex shrink-0 border-b bg-background lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileTab("form")}
+          className={cn(
+            "flex-1 py-2.5 text-xs font-medium transition-colors",
+            mobileTab === "form"
+              ? "border-b-2 border-primary text-primary"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Form
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab("preview")}
+          className={cn(
+            "flex-1 py-2.5 text-xs font-medium transition-colors",
+            mobileTab === "preview"
+              ? "border-b-2 border-primary text-primary"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Preview
+        </button>
+      </div>
+
       <div className="flex min-h-0 flex-1 overflow-hidden">
-        <aside className="flex w-full shrink-0 flex-col border-r bg-card lg:w-[530px]">
+        <aside className={cn(
+          "flex w-full shrink-0 flex-col border-r bg-card lg:w-[530px]",
+          mobileTab === "preview" && "hidden lg:flex"
+        )}>
           <div className="min-h-0 flex-1 overflow-y-auto">
             <div className="space-y-1 p-6">
               <FormSection icon={FileText} title="Basic Information">
@@ -314,7 +353,34 @@ export function PageBuilderForm({
             </div>
           </div>
 
-          <div className="shrink-0 border-t bg-card px-6 py-4">
+          <div className="shrink-0 border-t bg-card px-6 py-4 space-y-3">
+            <div className="space-y-2">
+              <span className="text-xs font-medium text-muted-foreground">AI Model</span>
+              <div className="grid grid-cols-3 gap-1 rounded-lg border bg-muted/50 p-1">
+                {MODEL_OPTIONS.map(({ id, label }) => {
+                  const Icon = id === "fast" ? Lightning : id === "think" ? Lightbulb : Gauge;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setModelTier(id)}
+                      className={cn(
+                        "flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-all",
+                        modelTier === id
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      )}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {MODEL_OPTIONS.find((m) => m.id === modelTier)?.description}
+              </p>
+            </div>
             <Button
               type="button"
               className="w-full gap-2"
@@ -323,7 +389,7 @@ export function PageBuilderForm({
             >
               {generating ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <CircleNotch className="h-4 w-4 animate-spin" />
                   Generating...
                 </>
               ) : generatedHtml ? (
@@ -341,7 +407,10 @@ export function PageBuilderForm({
           </div>
         </aside>
 
-        <main className="hidden flex-1 overflow-hidden bg-muted/50 lg:block">
+        <main className={cn(
+          "flex-1 overflow-hidden bg-muted/30",
+          mobileTab === "form" ? "hidden lg:block" : "block"
+        )}>
           <div className="flex h-full flex-col items-center justify-center p-6">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -352,7 +421,7 @@ export function PageBuilderForm({
                 </span>
                 {generating && (
                   <span className="inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 text-xs font-normal text-primary">
-                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <CircleNotch className="h-3 w-3 animate-spin" />
                     Generating...
                   </span>
                 )}

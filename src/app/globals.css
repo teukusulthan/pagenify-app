@@ -49,38 +49,39 @@
 }
 
 :root {
-  --background: #0b0b0e;
-  --foreground: #fafafa;
-  --card: #0d0d0e;
-  --card-foreground: #fafafa;
-  --popover: #111113;
-  --popover-foreground: #fafafa;
-  --primary: #6366f1;
+  --background: #09090c;
+  --foreground: #f4f4f6;
+  --card: #0e0e12;
+  --card-foreground: #f4f4f6;
+  --popover: #111116;
+  --popover-foreground: #f4f4f6;
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
-  --secondary: #1c1c22;
-  --secondary-foreground: #fafafa;
-  --muted: #1c1c22;
-  --muted-foreground: #a1a1aa;
-  --accent: #1e1e26;
-  --accent-foreground: #fafafa;
-  --destructive: #ef4444;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #6366f1;
-  --chart-1: #6366f1;
-  --chart-2: #818cf8;
-  --chart-3: #a78bfa;
-  --chart-4: #c084fc;
-  --chart-5: #e879f9;
+  --secondary: #1a1a22;
+  --secondary-foreground: #f4f4f6;
+  --muted: #1a1a22;
+  --muted-foreground: #9191a0;
+  --accent: #1c1c26;
+  --accent-foreground: #f4f4f6;
+  --destructive: #e53e3e;
+  --destructive-foreground: #ffffff;
+  --border: #232330;
+  --input: #232330;
+  --ring: #4f46e5;
+  --chart-1: #4f46e5;
+  --chart-2: #6d68f0;
+  --chart-3: #9085f5;
+  --chart-4: #b8a4f8;
+  --chart-5: #d8c8fc;
   --radius: 0.625rem;
-  --sidebar: #0e0e11;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #6366f1;
+  --sidebar: #0c0c10;
+  --sidebar-foreground: #f4f4f6;
+  --sidebar-primary: #4f46e5;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1c1c22;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #6366f1;
+  --sidebar-accent: #1a1a22;
+  --sidebar-accent-foreground: #f4f4f6;
+  --sidebar-border: #232330;
+  --sidebar-ring: #4f46e5;
 }
 
 @layer base {
@@ -92,10 +93,30 @@
   }
   html {
     @apply font-sans;
+    scrollbar-width: thin;
+    scrollbar-color: #232330 transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #232330;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2e2e3e;
   }
   button,
   [role="button"],
   a {
     cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }

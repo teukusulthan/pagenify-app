@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeSlash, CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -115,7 +115,7 @@ export function RegisterForm() {
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
-              <EyeOff className="size-4" />
+              <EyeSlash className="size-4" />
             ) : (
               <Eye className="size-4" />
             )}
@@ -151,7 +151,7 @@ export function RegisterForm() {
             }
           >
             {showConfirmPassword ? (
-              <EyeOff className="size-4" />
+              <EyeSlash className="size-4" />
             ) : (
               <Eye className="size-4" />
             )}
@@ -167,7 +167,7 @@ export function RegisterForm() {
       <Button type="submit" className="h-10 w-full text-sm" disabled={loading}>
         {loading ? (
           <>
-            <Loader2 className="size-4 animate-spin" />
+            <CircleNotch className="size-4 animate-spin" />
             Creating account...
           </>
         ) : (
