@@ -1,11 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ExternalLink, Pencil, Archive } from "lucide-react";
+import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils/date";
 import { PageThumbnail } from "./page-thumbnail";
@@ -21,6 +22,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface PageCardProps {
   page: PageItem;
@@ -29,91 +37,175 @@ interface PageCardProps {
 
 export function PageCard({ page, username }: PageCardProps) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const publicUrl = `/u/${username}/${page.slug}`;
 
-  async function handleArchive() {
+  async function handleDelete() {
     try {
       const res = await fetch(`/api/pages/${page.id}/archive`, {
         method: "POST",
       });
       const result = await res.json();
+
       if (result.success) {
-        toast.success("Page archived");
+        toast.success("Page moved to trash");
+        setOpen(false);
         router.refresh();
       } else {
         toast.error(result.message);
       }
     } catch {
-      toast.error("Archive failed");
+      toast.error("Delete failed");
     }
   }
 
   return (
-    <Card className="group overflow-hidden p-0 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-primary/30">
-      {/* Thumbnail */}
-      <Link href={publicUrl} target="_blank">
-        <PageThumbnail html={page.generatedHtml} />
-      </Link>
-
-      <div className="p-4">
-        <div className="mb-2 flex items-start justify-between gap-2">
-          <CardTitle className="text-sm font-semibold leading-tight">
-            {page.title}
-          </CardTitle>
-          <Badge variant="default" className="shrink-0 text-[11px]">
-            Active
-          </Badge>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="group block w-full overflow-hidden rounded-xl border bg-card p-0 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <div className="p-2 pb-0">
+          <div className="overflow-hidden rounded-lg border bg-background">
+            <PageThumbnail html={page.generatedHtml} />
+          </div>
         </div>
 
-        <p className="mb-1 text-xs text-muted-foreground truncate">
-          {publicUrl}
-        </p>
-        <p className="mb-3 text-[11px] text-muted-foreground">
-          Created {formatDate(page.createdAt)} · Updated{" "}
-          {formatDate(page.updatedAt)}
-        </p>
+        <div className="p-4">
+          <div className="mb-2 flex items-start justify-between gap-2">
+            <CardTitle className="text-sm font-semibold leading-tight">
+              {page.title}
+            </CardTitle>
+            <Badge variant="default" className="shrink-0 text-[11px]">
+              Active
+            </Badge>
+          </div>
 
-        <div className="flex gap-1.5">
-          <Link href={publicUrl} target="_blank">
-            <Button variant="outline" size="sm" className="h-7 text-xs">
-              <ExternalLink className="mr-1 h-3 w-3" />
-              View
-            </Button>
-          </Link>
-          <Link href={`/dashboard/pages/${page.id}/edit`}>
-            <Button variant="outline" size="sm" className="h-7 text-xs">
-              <Pencil className="mr-1 h-3 w-3" />
-              Edit
-            </Button>
-          </Link>
-          <AlertDialog>
-            <AlertDialogTrigger
-              render={
-                <Button variant="outline" size="sm" className="h-7 text-xs">
-                  <Archive className="mr-1 h-3 w-3" />
-                  Archive
+          <p className="line-clamp-3 text-xs text-muted-foreground">
+            {page.description}
+          </p>
+
+          <p className="mt-3 text-[11px] text-muted-foreground">
+            Created {formatDate(page.createdAt)} · Updated{" "}
+            {formatDate(page.updatedAt)}
+          </p>
+        </div>
+      </button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          className="max-w-xl p-0 sm:max-w-xl"
+          showCloseButton={false}
+        >
+          <div className="border-b bg-background p-3">
+            <div className="overflow-hidden rounded-lg border bg-background">
+              <PageThumbnail html={page.generatedHtml} />
+            </div>
+          </div>
+
+          <div className="px-4 pb-4 pt-3">
+            <DialogHeader className="gap-2">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <DialogTitle className="text-sm font-semibold leading-5">
+                    {page.title}
+                  </DialogTitle>
+                  <DialogDescription className="mt-1 text-xs leading-5 text-muted-foreground">
+                    {page.description}
+                  </DialogDescription>
+                </div>
+
+                <Badge variant="default" className="shrink-0 text-[10px]">
+                  Active
+                </Badge>
+              </div>
+            </DialogHeader>
+
+            <div className="mt-3 grid gap-3 rounded-lg border bg-muted/20 p-3 sm:grid-cols-2">
+              <div className="min-w-0 sm:col-span-2">
+                <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Public URL
+                </p>
+                <p className="truncate text-xs text-foreground">{publicUrl}</p>
+              </div>
+
+              <div>
+                <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Created
+                </p>
+                <p className="text-xs text-foreground">
+                  {formatDate(page.createdAt)}
+                </p>
+              </div>
+
+              <div>
+                <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Updated
+                </p>
+                <p className="text-xs text-foreground">
+                  {formatDate(page.updatedAt)}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <Link href={publicUrl} target="_blank">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 w-full text-xs sm:w-auto"
+                >
+                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                  View
                 </Button>
-              }
-            />
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Archive this page?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This page will be removed from your active list and its public
-                  URL will return 404. You can recover it later from the
-                  archived pages section.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleArchive}>
-                  Archive
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
-    </Card>
+              </Link>
+
+              <Link href={`/dashboard/pages/${page.id}/edit`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 w-full text-xs sm:w-auto"
+                >
+                  <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                  Edit
+                </Button>
+              </Link>
+
+              <AlertDialog>
+                <AlertDialogTrigger
+                  render={
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 w-full text-xs sm:w-auto"
+                    >
+                      <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                      Delete
+                    </Button>
+                  }
+                />
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete this page?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This page will be moved to the Trash Bin and removed from
+                      your active list. Its public URL will return 404, and you
+                      can restore it later from the Trash Bin.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete}>
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ArchivedPageList } from "@/components/dashboard/archived-page-list";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 
 export default async function ArchivedPage() {
   const user = await getCurrentUser();
@@ -33,8 +33,13 @@ export default async function ArchivedPage() {
               Back
             </Button>
           </Link>
-          <h1 className="text-xl font-bold">Archived Pages</h1>
+
+          <div className="flex items-center gap-2">
+            <Trash2 className="h-5 w-5 text-muted-foreground" />
+            <h1 className="text-xl font-bold">Trash Bin</h1>
+          </div>
         </div>
+
         <ArchivedPageList pages={serializedPages} />
       </main>
     </div>

@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import {
   registerSchema,
   type RegisterInput,
@@ -12,11 +15,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
 
 export function RegisterForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -28,6 +32,7 @@ export function RegisterForm() {
 
   async function onSubmit(data: RegisterInput) {
     setLoading(true);
+
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -54,52 +59,129 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" {...register("username")} />
-        {errors.username && (
-          <p className="text-sm text-destructive">{errors.username.message}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" {...register("email")} />
-        {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register("password")} />
-        {errors.password && (
-          <p className="text-sm text-destructive">{errors.password.message}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
+      <div className="space-y-1.5">
+        <Label htmlFor="username" className="text-sm">
+          Username
+        </Label>
         <Input
-          id="confirmPassword"
-          type="password"
-          {...register("confirmPassword")}
+          id="username"
+          placeholder="Choose a username"
+          autoComplete="username"
+          className="h-10 text-sm"
+          aria-invalid={!!errors.username}
+          {...register("username")}
         />
+        {errors.username && (
+          <p className="text-xs text-destructive">{errors.username.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="email" className="text-sm">
+          Email address
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="name@company.com"
+          autoComplete="email"
+          className="h-10 text-sm"
+          aria-invalid={!!errors.email}
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-xs text-destructive">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="password" className="text-sm">
+          Password
+        </Label>
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Create a password"
+            autoComplete="new-password"
+            className="h-10 pr-10 text-sm"
+            aria-invalid={!!errors.password}
+            {...register("password")}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((value) => !value)}
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )}
+          </button>
+        </div>
+        {errors.password && (
+          <p className="text-xs text-destructive">{errors.password.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="confirmPassword" className="text-sm">
+          Confirm password
+        </Label>
+        <div className="relative">
+          <Input
+            id="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm your password"
+            autoComplete="new-password"
+            className="h-10 pr-10 text-sm"
+            aria-invalid={!!errors.confirmPassword}
+            {...register("confirmPassword")}
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword((value) => !value)}
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+            aria-label={
+              showConfirmPassword
+                ? "Hide confirm password"
+                : "Show confirm password"
+            }
+          >
+            {showConfirmPassword ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )}
+          </button>
+        </div>
         {errors.confirmPassword && (
-          <p className="text-sm text-destructive">
+          <p className="text-xs text-destructive">
             {errors.confirmPassword.message}
           </p>
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Creating account..." : "Register"}
+      <Button type="submit" className="h-10 w-full text-sm" disabled={loading}>
+        {loading ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            Creating account...
+          </>
+        ) : (
+          "Create account"
+        )}
       </Button>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-xs text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="text-primary underline">
-          Login
+        <Link
+          href="/login"
+          className="font-medium text-foreground transition-colors hover:text-primary"
+        >
+          Sign in
         </Link>
       </p>
     </form>

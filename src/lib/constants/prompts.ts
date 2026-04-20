@@ -1,4 +1,3 @@
-// ─── Design tokens injected into every page ───
 const CSS_RESET = `
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }

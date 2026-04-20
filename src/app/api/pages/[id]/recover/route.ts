@@ -6,17 +6,17 @@ import { AppError } from "@/lib/utils/errors";
 
 export async function POST(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
     const user = await requireAuth();
     const page = await recoverPage(id, user.id);
-    return apiSuccess("Page recovered", { page });
+    return apiSuccess("Page restored", { page });
   } catch (error) {
     if (error instanceof AppError) {
       return apiError(error.message, error.code, error.statusCode);
     }
-    return apiError("Failed to recover page", "UNKNOWN_ERROR", 500);
+    return apiError("Failed to restore page", "UNKNOWN_ERROR", 500);
   }
 }

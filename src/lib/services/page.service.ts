@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { generateUniqueSlug } from "./slug.service";
 import { NotFoundError, ForbiddenError } from "@/lib/utils/errors";
-import type { CreatePageInput, UpdatePageInput } from "@/lib/validations/page.schema";
+import type {
+  CreatePageInput,
+  UpdatePageInput,
+} from "@/lib/validations/page.schema";
 
 export async function getActivePages(userId: string) {
   return prisma.page.findMany({
@@ -26,10 +29,7 @@ export async function getPageById(id: string, userId: string) {
   return page;
 }
 
-export async function createPage(
-  userId: string,
-  input: CreatePageInput
-) {
+export async function createPage(userId: string, input: CreatePageInput) {
   const slug = await generateUniqueSlug(userId, input.title);
 
   return prisma.page.create({
@@ -51,7 +51,7 @@ export async function createPage(
 export async function updatePage(
   id: string,
   userId: string,
-  input: UpdatePageInput
+  input: UpdatePageInput,
 ) {
   await getPageById(id, userId);
 
@@ -78,7 +78,7 @@ export async function recoverPage(id: string, userId: string) {
   const page = await getPageById(id, userId);
 
   if (page.status !== "ARCHIVED") {
-    throw new ForbiddenError("Page is not archived");
+    throw new ForbiddenError("Page is not in trash");
   }
 
   return prisma.page.update({
