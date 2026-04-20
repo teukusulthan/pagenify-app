@@ -29,6 +29,8 @@ export const createPageSchema = pageFormSchema.extend({
 
 export type CreatePageInput = z.infer<typeof createPageSchema>;
 
-export const updatePageSchema = pageFormSchema.partial();
+export const updatePageSchema = pageFormSchema.partial().extend({
+  generatedHtml: z.string().min(1).optional(),
+});
 
 export type UpdatePageInput = z.infer<typeof updatePageSchema>;
