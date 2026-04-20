@@ -98,7 +98,7 @@ const CSS_COMPONENTS = `
 .faq-answer { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
 
 /* Final CTA */
-.cta-final { background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%); color: #fff; text-align: center; padding: 80px 0; }
+.cta-final { background: var(--primary); color: #fff; text-align: center; padding: 80px 0; }
 .cta-final h2 { font-size: 36px; font-weight: 700; margin-bottom: 16px; }
 .cta-final p { font-size: 18px; opacity: 0.9; max-width: 520px; margin: 0 auto 32px; }
 .cta-final .btn { background: #fff; color: var(--primary); font-weight: 700; }
@@ -155,8 +155,8 @@ const CSS_MARKETPLACE = `
 .included-list li::before { content: '✦'; color: var(--primary); font-size: 12px; margin-top: 3px; flex-shrink: 0; }
 @media (max-width: 768px) { .included-list { grid-template-columns: 1fr; } }
 
-/* Urgency / scarcity banner */
-.urgency-banner { background: linear-gradient(90deg, #fef3c7, #fde68a); border: 1px solid #f59e0b; border-radius: var(--radius-sm); padding: 14px 24px; text-align: center; font-size: 15px; font-weight: 600; color: #92400e; margin-bottom: 32px; }
+/* Highlight notice */
+.notice-bar { background: #fef9ec; border: 1px solid #f59e0b; border-radius: var(--radius-sm); padding: 14px 24px; text-align: center; font-size: 15px; font-weight: 600; color: #92400e; margin-bottom: 32px; }
 
 /* CSS-only fade-in animation */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -219,7 +219,7 @@ The page MUST open with the hero. Choose remaining sections based on what best s
 
 2. **Benefits** — What the buyer actually gains. Use class="section section-alt". 3–6 benefit-cards in a grid. Each card: benefit-icon (emoji), h4 (outcome headline), p (1–2 sentences from buyer's perspective, starting with "You'll…" or "Finally…").
 
-3. **Final CTA** — Closing section with urgency. Use class="cta-final". h2, p (reinforce the transformation), .btn (white button).
+3. **Final CTA** — Closing section. Use class="cta-final". h2, p (reinforce the transformation), .btn (white button). The background MUST be a solid color — never a multi-color gradient or rainbow gradient. Do NOT include scarcity copy ("X spots left", "X products left", "limited time", countdown-style text) unless the user explicitly provided that information.
 
 ### OPTIONAL SECTIONS (choose those relevant to this offer):
 4. **Stats Bar** — class="stats-bar". 3–4 impressive numbers (use plausible illustrative numbers, e.g. "10,000+ customers", "4.9★ rating", "#1 in category"). Label each stat. Great for established products.
@@ -246,12 +246,12 @@ The page MUST open with the hero. Choose remaining sections based on what best s
 - **Power words**: unlock, effortless, proven, instant, transform, finally, guaranteed, exclusive.
 - **Benefits vs features**: Benefits = what the buyer gains. Features = what the product does. Always lead with benefits.
 - **Social proof**: Specific beats vague. "Saved me $2,400/month" beats "Very useful".
-- **Urgency**: Use honest scarcity — limited bonuses, founding pricing, cohort size — not fake countdown timers.
 - **CTA text**: Combine action + outcome. "Get Instant Access", "Start Selling Today", "Unlock the System".
 - **Truthfulness**: All claims must be grounded in the user-provided information. Do NOT invent features, pricing, or guarantees not mentioned by the user.
 
 ## VISUAL EXCELLENCE STANDARDS
-- Each section must feel visually distinct — alternate backgrounds, use gradients and borders creatively
+- Each section must feel visually distinct — alternate backgrounds, use subtle gradients on hero/section backgrounds only, never rainbow or multi-color gradients on CTA buttons or the final CTA section
+- CTA buttons and the final CTA section MUST use a single solid brand color, not gradients
 - Typography hierarchy: display (48–64px) → section-title (32px) → card-title (17–20px) → body (15px)
 - Generous whitespace — minimum 80px section padding, 24px card padding
 - All interactive elements must have hover states
@@ -304,8 +304,8 @@ ${imageInstruction}
 2. **Color theme**: Choose a color palette that fits this offer type and audience. Override the CSS variables if indigo doesn't suit this product's personality.
 3. **Sections**: Select 6–8 sections from the system. Prioritize sections that address the biggest buyer objections and desires for this specific offer type.
 4. **Testimonials**: Write 3 placeholder testimonials that sound authentic to this audience. Use specific numbers and emotional language. Placeholder names should feel real and relevant to the target market.
-5. **Urgency element**: If appropriate, add a .urgency-banner or scarcity copy near the CTA. Keep it honest.
-6. **Animations**: Apply fade-up classes to the hero elements for a polished entrance effect.
+5. **Animations**: Apply fade-up classes to the hero elements for a polished entrance effect.
+6. **CTA styling**: The final CTA section background MUST be a solid color (override --primary if needed). Never use rainbow gradients, multi-stop gradients, or scarcity copy ("only X left", "X spots remaining", "limited time offer") in the CTA.
 
 Return ONLY the complete HTML document. No markdown fences, no code blocks, no explanations outside the HTML.`;
 }
