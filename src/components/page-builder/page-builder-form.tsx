@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import {
   FileText,
   Users,
@@ -15,11 +16,11 @@ import {
   Lightning,
   Gauge,
   Lightbulb,
+  ArrowSquareOut,
 } from "@phosphor-icons/react/dist/ssr";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -29,6 +30,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   pageFormSchema,
   type PageFormInput,
@@ -101,12 +112,15 @@ export function PageBuilderForm({
   submitLoadingLabel,
   headerTitle,
 }: PageBuilderFormProps) {
+  const router = useRouter();
   const [generating, setGenerating] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [modelTier, setModelTier] = useState<ModelTier>("medium");
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
   const [verbIndex, setVerbIndex] = useState(0);
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const { generatedHtml, setGeneratedHtml } = usePreviewStore();
+  const initialHtmlRef = useRef<string | null>(generatedHtml);
   const previewRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.45);
 
@@ -142,7 +156,7 @@ export function PageBuilderForm({
     handleSubmit,
     control,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<PageFormInput>({
     resolver: zodResolver(pageFormSchema),
     defaultValues: {
@@ -157,6 +171,18 @@ export function PageBuilderForm({
   });
 
   const title = watch("title");
+
+  const hasUnsavedChanges = isDirty || generatedHtml !== initialHtmlRef.current;
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   async function handleGeneratePreview(data: PageFormInput) {
     setGenerating(true);
@@ -213,7 +239,19 @@ export function PageBuilderForm({
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard">Pagenify</BreadcrumbLink>
+                <button
+                  type="button"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => {
+                    if (hasUnsavedChanges) {
+                      setShowLeaveDialog(true);
+                    } else {
+                      router.push("/dashboard");
+                    }
+                  }}
+                >
+                  Pagenify
+                </button>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
@@ -223,6 +261,27 @@ export function PageBuilderForm({
           </Breadcrumb>
 
           <div className="flex items-center gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5"
+                  disabled={!generatedHtml || generating}
+                  onClick={() => {
+                    const blob = new Blob([generatedHtml!], { type: "text/html" });
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, "_blank");
+                  }}
+                >
+                  <ArrowSquareOut className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Full Preview</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Open full preview in new tab</TooltipContent>
+            </Tooltip>
+
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -295,7 +354,7 @@ export function PageBuilderForm({
           mobileTab === "preview" && "hidden lg:flex"
         )}>
           <div className="min-h-0 flex-1 overflow-y-auto">
-            <div className="space-y-1 p-6">
+            <div className="space-y-4 p-6">
               <FormSection icon={FileText} title="Basic Information">
                 <FormField
                   label="Title"
@@ -558,6 +617,23 @@ export function PageBuilderForm({
           </div>
         </main>
       </div>
+
+      <AlertDialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Leave without saving?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. If you leave now, your changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={() => router.push("/dashboard")}>
+              Leave anyway
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
