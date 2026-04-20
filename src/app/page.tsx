@@ -28,29 +28,29 @@ export default async function LandingPage() {
       </div>
 
       {/* ─── Navbar ─── */}
-      <header className="relative z-20 border-b border-border/30 bg-background/70 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
-          <span className="text-sm font-semibold tracking-tight">Pagenify</span>
+      <header className="fixed inset-x-0 top-0 z-20 border-b border-border/30 bg-background/70 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5">
+          <span className="text-base font-semibold tracking-tight">Pagenify</span>
 
           <div className="flex items-center gap-2">
             {user ? (
               <Link href="/dashboard">
-                <Button size="sm" className="gap-1.5">
+                <Button className="gap-1.5">
                   Dashboard
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                     Sign in
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="gap-1.5">
+                  <Button className="gap-1.5">
                     Get started
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
               </>
@@ -60,7 +60,7 @@ export default async function LandingPage() {
       </header>
 
       {/* ─── Hero ─── */}
-      <section className="relative pb-12 pt-24 text-center sm:pt-32">
+      <section className="relative pb-12 pt-36 text-center sm:pt-44">
         <div className="mx-auto max-w-4xl px-5">
           {/* Badge */}
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-3.5 py-1.5 text-xs font-medium text-primary">
