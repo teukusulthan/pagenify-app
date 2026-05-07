@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pagenify — AI Sales Page Builder",
+  title: "Pagenify - AI Sales Page Builder",
   description:
     "Create structured, persuasive sales pages with AI-powered copy generation.",
 };
